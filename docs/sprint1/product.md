@@ -111,4 +111,4 @@
 * **Публічний demo-стенд (Toolshop):** [practicesoftwaretesting.com](https://practicesoftwaretesting.com)
 * **GitHub-репозиторій команди:** [github.com/BodiaBrn/shopline-fb44](https://github.com/BodiaBrn/shopline-fb44)
 * **BPMN-моделі процесів:** каталог `docs/sprint1/bpmn/`
-* **Беклог User Stories:** робочий файл `docs/sprint1/backlog.xlsx`
+* **Беклог User Stories:** робочий файл `docs/sprint1/backlog.md`
