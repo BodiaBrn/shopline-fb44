@@ -1,34 +1,36 @@
 ---
 name: Звіт про дефект
 about: Шаблон для фіксації знайденого дефекту в Спринті 3
-title: '[BUG] '
+title: '[BUG-XXX] Короткий опис дефекту'
 labels: 'status:new, sprint:3'
 assignees: ''
 ---
 
-**Severity:** Blocker | Critical | Major | Normal | Minor | Trivial
-**Priority:** P1 | P2 | P3
-**Linked Test Case:** TC-XXX
-**Linked Requirement:** ID вимоги з SRS 1.1
+**Severity:** Major
+**Priority:** P1
+**Linked Test Case:** TC-004
+**Linked Requirement:** F-10, GUI-65
 
 ### Description
-Короткий опис проблеми та обґрунтування Severity і Priority.
+Опис проблеми та обґрунтування її впливу на систему відповідно до специфікації SRS 1.1.
 
 ### Steps to reproduce
 1. Відкрити https://practicesoftwaretesting.com у браузері (нова сесія).
-2. ...
+2. Перейти до відповідного розділу / форми.
+3. Ввести тестові дані або виконати цільову дію.
+4. Перевірити стан інтерфейсу або повідомлення валідації.
 
 ### Actual result
-Що відбулося фактично після виконання кроків.
+Фактичний результат (що саме відбулося у застосунку, які помилки виведено).
 
 ### Expected result
-Що мало відбутися згідно з вимогою SRS 1.1.
+Очікуваний результат згідно з вимогами специфікації SRS 1.1.
 
 ### Environment
 - Demo: https://practicesoftwaretesting.com (Дата: 2026-10-27)
-- Браузер: Chrome / Firefox
-- ОС: Windows 11 / Linux / macOS
+- Браузер: Chrome 129
+- ОС: Windows 11
 - Обліковий запис: customer@practicesoftwaretesting.com / Guest
 
 ### Attachments
-`BUG-XXX-1.png` — Опис того, що зображено на знімку екрана.
+`BUG-XXX-1.png` — Скріншот із фіксацією дефекту.
