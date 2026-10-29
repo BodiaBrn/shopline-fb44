@@ -109,16 +109,20 @@
 | BUG-004 | #5 | TC-027 | GUI-30 | Для кількості 0 кнопка «Add to cart» блокується, але підказка «Minimum quantity is 1» не з'являється | Minor | P3 | [BUG-004-1.png](./attachments/BUG-004-1.png) |
 | BUG-005 | #6 | TC-022 | S-20, GUI-10 | Після «Sign out» і кнопки браузера «Назад» у шапці лишається меню авторизованого користувача | Normal | P2 | [BUG-005-1.png](./attachments/BUG-005-1.png) |
 | BUG-006 | #7 | TC-033 | F-110, GUI-50 | На кроці «Payment» при оплаті карткою з порожніми полями виводиться загальне «Unknown error» замість повідомлень біля полів | Major | P2 | [BUG-006-1.png](./attachments/BUG-006-1.png) |
+| BUG-007 | #8 | TC-020 | GUI-10 | На сторінці `/#/account` відображається зламане зображення (broken image) над заголовком «My account» | Minor | P3 | [BUG-007-1.png](./attachments/BUG-007-1.png) |
+| BUG-008 | #9 | TC-005 | F-20, GUI-10 | У шапці авторизованого кабінету `/#/account` відображається «User Data not found» замість даних користувача | Major | P2 | [BUG-008-1.png](./attachments/BUG-008-1.png) |
+| BUG-009 | #10 | TC-007 | F-30 | При відновленні пароля відображається сирий ключ локалізації `page.forgot-password.confirm` | Normal | P2 | [BUG-009-1.png](./attachments/BUG-009-1.png) |
+| BUG-010 | #11 | TC-004 | F-10, GUI-50 | У формі зміни пароля виводиться помилка валідації «The new password field is required.» | Major | P2 | [BUG-010-1.png](./attachments/BUG-010-1.png) |
  
 Severity і Priority у таблиці збігаються з мітками `severity:*` та `priority:*` відповідних Issues.
  
 | Severity | Кількість | | Priority | Кількість |
 |---|---|---|---|---|
 | Blocker | 0 | | P1 | 1 |
-| Critical | 0 | | P2 | 3 |
-| Major | 3 (BUG-001, 002, 006) | | P3 | 2 |
-| Normal | 1 (BUG-005) | | | |
-| Minor | 2 (BUG-003, 004) | | | |
+| Critical | 0 | | P2 | 6 |
+| Major | 5 (BUG-001, 002, 006, 008, 010) | | P3 | 3 |
+| Normal | 2 (BUG-005, 009) | | | |
+| Minor | 3 (BUG-003, 004, 007) | | | |
 | Trivial | 0 | | | |
  
 ## Аудит інкременту
