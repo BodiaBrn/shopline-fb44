@@ -1,0 +1,94 @@
+{
+  "id": "e4f8d9b1-7a6c-4b5d-9e2f-1a3b5c7d9e8f",
+  "version": "2.0",
+  "name": "ShopLine",
+  "url": "https://practicesoftwaretesting.com",
+  "tests": [
+    {
+      "id": "a1b2c3d4-e5f6-4a5b-8c7d-9e0f1a2b3c4d",
+      "name": "SearchHammerTest",
+      "commands": [
+        {
+          "id": "c1d2e3f4-g5h6-4i5j-8k7l-9m0n1o2p3q4r",
+          "comment": "",
+          "command": "open",
+          "target": "/",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "d2e3f4g5-h6i7-4j5k-8l7m-9n0o1p2q3r4s",
+          "comment": "",
+          "command": "setWindowSize",
+          "target": "1920x1080",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "e3f4g5h6-i7j8-4k5l-8m7n-9o0p1q2r3s4t",
+          "comment": "",
+          "command": "waitForElementVisible",
+          "target": "css=[data-test='search-query']",
+          "targets": [],
+          "value": "10000"
+        },
+        {
+          "id": "f4g5h6i7-j8k9-4l5m-8n7o-9p0q1r2s3t4u",
+          "comment": "",
+          "command": "type",
+          "target": "css=[data-test='search-query']",
+          "targets": [],
+          "value": "Hammer"
+        },
+        {
+          "id": "g5h6i7j8-k9l0-4m5n-8o7p-9q0r1s2t3u4v",
+          "comment": "",
+          "command": "click",
+          "target": "css=[data-test='search-submit']",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "h6i7j8k9-l0m1-4n5o-8p7q-9r0s1t2u3v4w",
+          "comment": "",
+          "command": "waitForElementVisible",
+          "target": "css=[data-test='search-caption']",
+          "targets": [],
+          "value": "10000"
+        },
+        {
+          "id": "i7j8k9l0-m1n2-4o5p-8q7r-9s0t1u2v3w4x",
+          "comment": "",
+          "command": "assertElementPresent",
+          "target": "css=[data-test='product-name']",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "j8k9l0m1-n2o3-4p5q-8r7s-9t0u1v2w3x4y",
+          "comment": "",
+          "command": "verifyText",
+          "target": "css=[data-test='search-caption']",
+          "targets": [],
+          "value": "Searched for: Hammer"
+        }
+      ]
+    }
+  ],
+  "suites": [
+    {
+      "id": "b2c3d4e5-f6g7-4h5i-8j7k-9l0m1n2o3p4q",
+      "name": "Default Suite",
+      "persistSession": false,
+      "parallel": false,
+      "timeout": 300,
+      "tests": [
+        "a1b2c3d4-e5f6-4a5b-8c7d-9e0f1a2b3c4d"
+      ]
+    }
+  ],
+  "urls": [
+    "https://practicesoftwaretesting.com/"
+  ],
+  "plugins": []
+}
