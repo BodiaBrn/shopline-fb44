@@ -11,7 +11,7 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DisplayName("PromoCodeValidator — перевірка та застосування промокодів (BL-70, BL-80)")
+@DisplayName("PromoCodeValidator — перевірка та застосування промокодів (BL-70, BL-80) [Олександр Шандра]")
 class PromoCodeValidatorTest {
 
     private PromoCodeValidator validator;
