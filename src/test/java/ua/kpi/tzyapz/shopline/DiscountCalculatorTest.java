@@ -60,8 +60,8 @@ class DiscountCalculatorTest {
         // Arrange
         BigDecimal subtotal = new BigDecimal("9999.99");
         
-        // Act
-        int actualPercent = calc.discountPercent(subtotal);
+        // Act (Виправлено назву методу)
+        int actualPercent = calc.volumeDiscountPercent(subtotal);
         
         // Assert
         assertEquals(10, actualPercent, "Для суми 9999.99 грн знижка має бути 10%, 15% починається рівно з 10000");
