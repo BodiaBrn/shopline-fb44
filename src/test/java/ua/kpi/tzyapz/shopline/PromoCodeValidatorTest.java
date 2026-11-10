@@ -66,4 +66,21 @@ class PromoCodeValidatorTest {
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () -> validator.apply(promo, today, new BigDecimal("300.00")));
     }
+
+    @Test
+    @DisplayName("BL-80: Успішне застосування відсоткового промокоду повертає правильну суму [Богдан Алферов]")
+    void applyPercentPromoCodeSuccess() {
+        PromoCode promo = new PromoCode("SALE10", PromoCode.Type.PERCENT, new BigDecimal("10"), today.plusDays(1), false, false);
+        BigDecimal discount = validator.apply(promo, today, new BigDecimal("1000.00"));
+        assertEquals(new BigDecimal("100.00"), discount);
+    }
+
+    @Test
+    @DisplayName("BL-70: Промокод у день закінчення терміну дії має бути валідним (BUG-M3) [Богдан Алферов]")
+    void promoCodeValidOnExpirationDay() {
+        // Промокод діє до 'today' включно
+        PromoCode promo = new PromoCode("TODAY10", PromoCode.Type.PERCENT, new BigDecimal("10"), today, false, false);
+        PromoCodeValidator.ValidationResult result = validator.validate(promo, today, new BigDecimal("1000.00"));
+        assertTrue(result.valid(), "Промокод має бути валідним у день закінчення терміну");
+    }
 }
