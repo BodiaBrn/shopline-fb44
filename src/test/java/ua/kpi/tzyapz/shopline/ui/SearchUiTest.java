@@ -34,6 +34,23 @@ class SearchUiTest {
             driver.quit();
         }
     }
+    @Test
+    @DisplayName("UI-02: Пошук неіснуючого товару повертає порожній список")
+    void searchNonExistingProductReturnsEmptyList() {
+        driver.get("https://practicesoftwaretesting.com");
+
+        WebElement searchInput = wait.until(
+            ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test='search-query']"))
+        );
+        searchInput.sendKeys("NonExistingItem9999");
+
+        driver.findElement(By.cssSelector("[data-test='search-submit']")).click();
+
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test='search-caption']")));
+
+        Assertions.assertEquals(0, driver.findElements(By.cssSelector("[data-test='product-name']")).size(),
+            "Для неіснуючого запиту картки товарів не повинні відображатися");
+    }
 
     @Test
     @DisplayName("UI-01: Пошук інструмента 'Hammer' повертає відповідні картки товару")
