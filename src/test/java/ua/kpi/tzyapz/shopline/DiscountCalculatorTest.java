@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DisplayName("DiscountCalculator — обчислення знижки за обсяг та вартості доставки (BL-50, BL-60)")
+@DisplayName("DiscountCalculator — обчислення знижки за обсяг та вартості доставки (BL-50, BL-60) [Олександр Шандра]")
 class DiscountCalculatorTest {
 
     private DiscountCalculator calc;
