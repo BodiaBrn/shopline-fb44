@@ -23,8 +23,7 @@ class CartTest {
     void newCartIsEmpty() {
         // Arrange & Act & Assert
         assertAll("Перевірка початкового стану кошика",
-            // Виправлено порівняння шкал BigDecimal
-            () -> assertEquals(new BigDecimal("0.00"), cart.subtotal(), "Сума нового кошика має бути 0.00"),
+            () -> assertEquals(new BigDecimal("0.00"), cart.subtotal(), "Сума нового кошика має бути 0.00 зі scale=2"),
             () -> assertEquals(0, cart.itemCount(), "Кількість товарів у новому кошику має бути 0")
         );
     }
