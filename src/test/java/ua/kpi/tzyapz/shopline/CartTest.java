@@ -56,4 +56,23 @@ class CartTest {
             cart.addItem("DRL-002", "Свердло по металу", price, 0);
         }, "Кількість товару <= 0 має викликати IllegalArgumentException");
     }
+
+    @Test
+    @DisplayName("BL-40: Видалення товару зменшує subtotal та itemCount [Богдан Алферов]")
+    void removeItemSuccess() {
+        cart.addItem("WRN-001", "Ключ гайковий", new BigDecimal("100.00"), 2);
+        cart.removeItem("WRN-001");
+        assertAll("Перевірка після видалення",
+            () -> assertEquals(new BigDecimal("0.00"), cart.subtotal()),
+            () -> assertEquals(0, cart.itemCount())
+        );
+    }
+
+    @Test
+    @DisplayName("BL-40: Зміна кількості товару оновлює subtotal [Богдан Алферов]")
+    void changeQtyUpdatesSubtotal() {
+        cart.addItem("WRN-001", "Ключ гайковий", new BigDecimal("100.00"), 1);
+        cart.changeQty("WRN-001", 3);
+        assertEquals(new BigDecimal("300.00"), cart.subtotal());
+    }
 }
