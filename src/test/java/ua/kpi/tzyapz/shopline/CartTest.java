@@ -4,9 +4,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-@DisplayName("Юніт-тести кошика покупок Cart (Вадим Костюк)")
+@DisplayName("Cart — операції з кошиком товарів (BL-40) [Вадим Костюк]")
 class CartTest {
 
     private Cart cart;
@@ -17,46 +19,41 @@ class CartTest {
     }
 
     @Test
-    @DisplayName("BL-11: Порожній кошик після ініціалізації має нульову суму та нуль позицій")
-    void testNewCartIsEmpty() {
-        // Arrange & Act
-        double total = cart.getTotalPrice();
-        int itemCount = cart.getItemCount();
-
-        // Assert
+    @DisplayName("BL-40: Порожній кошик після ініціалізації має нульовий subtotal та 0 товарів")
+    void newCartIsEmpty() {
+        // Arrange & Act & Assert
         assertAll("Перевірка початкового стану кошика",
-            () -> assertEquals(0.0, total, 0.001, "Сума порожнього кошика має дорівнювати 0.0"),
-            () -> assertEquals(0, itemCount, "Кількість товарів у новому кошику має бути 0")
+            () -> assertEquals(BigDecimal.ZERO, cart.subtotal(), "Сума нового кошика має бути 0"),
+            () -> assertEquals(0, cart.itemCount(), "Кількість товарів у новому кошику має бути 0")
         );
     }
 
     @Test
-    @DisplayName("BL-12: Додавання товару коректно збільшує підсумкову вартість кошика")
-    void testAddItemIncreasesTotalPrice() {
+    @DisplayName("BL-40: Додавання товару збільшує subtotal та кількість позицій")
+    void addItemIncreasesSubtotalAndCount() {
         // Arrange
-        double itemPrice = 250.0;
+        BigDecimal price = new BigDecimal("250.00");
         int quantity = 2;
-        double expectedTotal = 500.0;
 
         // Act
-        cart.addItem("ITEM-001", itemPrice, quantity);
+        cart.addItem("WRN-001", "Ключ гайковий", price, quantity);
 
         // Assert
-        assertEquals(expectedTotal, cart.getTotalPrice(), 0.001, 
-                "Підсумкова вартість має дорівнювати добутку ціни на кількість");
+        assertAll("Перевірка після додавання товару",
+            () -> assertEquals(new BigDecimal("500.00"), cart.subtotal(), "Підсумок має бути 500.00 грн"),
+            () -> assertEquals(2, cart.itemCount(), "Загальна кількість товарів має бути 2")
+        );
     }
 
     @Test
-    @DisplayName("BL-13: Додавання товару з нульовою або від'ємною кількістю викликає помилку")
-    void testAddInvalidQuantityThrowsException() {
+    @DisplayName("BL-40: Додавання товару з нульовою або від'ємною кількістю викликає виняток")
+    void addInvalidQuantityThrowsException() {
         // Arrange
-        String itemId = "ITEM-002";
-        double price = 100.0;
-        int invalidQuantity = -1;
+        BigDecimal price = new BigDecimal("150.00");
 
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () -> {
-            cart.addItem(itemId, price, invalidQuantity);
-        }, "Додавання від'ємної кількості одиниць товару неприпустиме");
+            cart.addItem("DRL-002", "Свердло по металу", price, 0);
+        }, "Кількість товару <= 0 має викликати IllegalArgumentException");
     }
 }
