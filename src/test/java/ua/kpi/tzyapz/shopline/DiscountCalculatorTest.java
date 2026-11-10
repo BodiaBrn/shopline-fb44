@@ -60,7 +60,7 @@ class DiscountCalculatorTest {
         // Arrange
         BigDecimal subtotal = new BigDecimal("9999.99");
         
-        // Act (Виправлено назву методу)
+        // Act: виправлено виклик на volumeDiscountPercent
         int actualPercent = calc.volumeDiscountPercent(subtotal);
         
         // Assert
