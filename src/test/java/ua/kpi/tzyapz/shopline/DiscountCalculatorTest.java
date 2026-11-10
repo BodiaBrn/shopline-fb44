@@ -53,4 +53,44 @@ class DiscountCalculatorTest {
             () -> assertEquals(new BigDecimal("0.00"), calc.shippingFee(new BigDecimal("1500.00")), "Від 1500 грн доставка безкоштовна")
         );
     }
+    
+    @Test
+    @DisplayName("BL-30: Замовлення на суму 9999.99 грн отримує знижку 10%, а не 15% (межа третього порогу)")
+    void discountPercent_JustBelowHighestTier_ReturnsTenPercent() {
+        // Arrange
+        BigDecimal subtotal = new BigDecimal("9999.99");
+        
+        // Act
+        int actualPercent = calc.discountPercent(subtotal);
+        
+        // Assert
+        assertEquals(10, actualPercent, "Для суми 9999.99 грн знижка має бути 10%, 15% починається рівно з 10000");
+    }
+
+    @Test
+    @DisplayName("BL-30: Від'ємна сума замовлення викликає IllegalArgumentException")
+    void volumeDiscount_NegativeSubtotal_ThrowsException() {
+        // Arrange & Act
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> calc.volumeDiscount(new BigDecimal("-0.01")));
+        
+        // Assert
+        assertTrue(ex.getMessage().contains("невід'ємною"), 
+                "Повідомлення про помилку має вказувати, що сума невід'ємна. Фактичне повідомлення: " + ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("BL-30: При досягненні порогу 10000 грн застосовується лише знижка 15%, знижки не сумуються")
+    void volumeDiscount_HighestTier_DoesNotSumWithLowerTiers() {
+        // Arrange
+        BigDecimal subtotal = new BigDecimal("10000.00");
+        // 15% від 10000 = 1500.00
+        BigDecimal expectedDiscount = new BigDecimal("1500.00"); 
+        
+        // Act
+        BigDecimal actualDiscount = calc.volumeDiscount(subtotal);
+        
+        // Assert
+        assertEquals(expectedDiscount, actualDiscount, "Знижка має бути рівно 1500.00 (лише 15%), а не 30% (15+10+5)");
+    }
 }
