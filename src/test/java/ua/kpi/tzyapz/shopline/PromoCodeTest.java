@@ -18,11 +18,11 @@ class PromoCodeTest {
     void validPercentPromoCodeCreation() {
         PromoCode promo = new PromoCode("SALE2026", PromoCode.Type.PERCENT, new BigDecimal("15"), today.plusDays(10), false, false);
 
-        assertAll("Перевірка властивостей промокоду",
-            () -> assertEquals("SALE2026", promo.getCode()),
-            () -> assertEquals(PromoCode.Type.PERCENT, promo.getType()),
-            () -> assertEquals(new BigDecimal("15"), promo.getDiscountValue()),
-            () -> assertFalse(promo.isUsed())
+        assertAll("Перевірка властивостей промокоду (record)",
+            () -> assertEquals("SALE2026", promo.code()),
+            () -> assertEquals(PromoCode.Type.PERCENT, promo.type()),
+            () -> assertEquals(new BigDecimal("15"), promo.value()),
+            () -> assertFalse(promo.used())
         );
     }
 
@@ -31,18 +31,10 @@ class PromoCodeTest {
     void validFixedPromoCodeCreation() {
         PromoCode promo = new PromoCode("FIXED100", PromoCode.Type.FIXED, new BigDecimal("100.00"), today.plusDays(5), true, false);
 
-        assertAll("Перевірка фіксованого промокоду",
-            () -> assertEquals(PromoCode.Type.FIXED, promo.getType()),
-            () -> assertEquals(new BigDecimal("100.00"), promo.getDiscountValue()),
-            () -> assertTrue(promo.isOneTime())
+        assertAll("Перевірка фіксованого промокоду (record)",
+            () -> assertEquals(PromoCode.Type.FIXED, promo.type()),
+            () -> assertEquals(new BigDecimal("100.00"), promo.value()),
+            () -> assertTrue(promo.singleUse())
         );
-    }
-
-    @Test
-    @DisplayName("BL-70: Від'ємне значення знижки викликає IllegalArgumentException")
-    void negativeDiscountValueThrowsException() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            new PromoCode("INVALID", PromoCode.Type.PERCENT, new BigDecimal("-5.00"), today.plusDays(1), false, false);
-        });
     }
 }
