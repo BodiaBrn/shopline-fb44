@@ -15,11 +15,13 @@
 | **BL-40** | Валідація кількості товару | qty <= 0 -> IllegalArgumentException | `CartTest.addInvalidQuantityThrowsException` | Костюк В. | Шандра О. |
 | **BL-40** | Видалення позиції з кошика | Обнулення subtotal та itemCount після видалення | `CartTest.removeItemSuccess` | Алферов Б. | Шандра О. |
 | **BL-40** | Зміна кількості товару | Оновлення subtotal при зміні кількості | `CartTest.changeQtyUpdatesSubtotal` | Алферов Б. | Шандра О. |
+| **BL-40** | Верхня межа кількості товару | Qty: 99 (max) | `CartTest.addItemMaxQuantitySuccess` | Барановський Б. | Шандра О. |
 | **BL-30** | Поріг знижки 5% (від 2000 грн) | subtotal = 2000.00 грн -> 5% | `DiscountCalculatorTest.volumeDiscountFivePercentTier` | Шандра О. | Барановський Б. |
 | **BL-30** | Межа знижки 10% (9999.99 грн) | subtotal = 9999.99 грн -> 10% (15% від 10000.00) | `DiscountCalculatorTest.discountPercent_JustBelowHighestTier_ReturnsTenPercent` | Шандра О. | Барановський Б. |
 | **BL-30** | Максимальний поріг знижки 15% | subtotal = 10000.00 грн -> 1500.00 грн (без сумування порогів) | `DiscountCalculatorTest.volumeDiscount_HighestTier_DoesNotSumWithLowerTiers` | Шандра О. | Барановський Б. |
 | **BL-30** | Округлення суми знижки HALF_UP | subtotal = 2333.33 грн -> 116.67 грн | `DiscountCalculatorTest.volumeDiscountRoundsHalfUp` | Шандра О. | Барановський Б. |
 | **BL-30** | Від'ємна сума замовлення | subtotal < 0 -> IllegalArgumentException | `DiscountCalculatorTest.volumeDiscount_NegativeSubtotal_ThrowsException` | Шандра О. | Барановський Б. |
+| **BL-30** | Початковий поріг знижки (0%) | subtotal = 1999.99 грн -> 0% | `DiscountCalculatorTest.volumeDiscountBelowFirstTierReturnsZeroPercent` | Барановський Б. | Шандра О. |
 | **BL-60** | Порогова вартість доставки (1500 грн) | 1499.99 (120.00 грн), 1500.00 (0.00 грн) | `DiscountCalculatorTest.shippingFeeCalculation` | Шандра О. | Барановський Б. |
 | **BL-70** | Створення відсоткового промокоду | Перевірка полів record PromoCode (PERCENT, value, expiryDate) | `PromoCodeTest.validPercentPromoCodeCreation` | Костюк В. | Шандра О. |
 | **BL-70** | Створення фіксованого промокоду | singleUse == true, used == false, FIXED | `PromoCodeTest.validFixedPromoCodeCreation` | Костюк В. | Шандра О. |
@@ -30,3 +32,4 @@
 | **BL-70** | Термін дії промокоду (включно) | expiryDate == today -> valid() == true | `PromoCodeValidatorTest.promoCodeValidOnExpirationDay` | Алферов Б. | Шандра О. |
 | **BL-80** | Перевищення суми фіксованим промокодом | FIXED value > subtotal -> IllegalArgumentException | `PromoCodeValidatorTest.fixedPromoExceedingSubtotalThrowsException` | Шандра О. | Барановський Б. |
 | **BL-80** | Застосування відсоткового промокоду | PERCENT 10% від 1000.00 грн = 100.00 грн discount | `PromoCodeValidatorTest.applyPercentPromoCodeSuccess` | Алферов Б. | Шандра О. |
+| **BL-80** | Застосування фіксованого промокоду | FIXED 100.00 грн для суми 500.00 грн = 100.00 грн discount | `PromoCodeValidatorTest.applyFixedPromoCodeSuccess` | Барановський Б. | Шандра О. |
