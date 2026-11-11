@@ -6,41 +6,48 @@
 
 ---
 
-### UI-01 (TC-001): Авторизація покупця
+### UI-01 (LoginUiTest): Авторизація покупця
 * **Вимога SRS:** F-10, GUI-60
-* **URL:** `https://practicesoftwaretesting.com/#/auth/login`
+* **URL:** `https://practicesoftwaretesting.com/auth/login`
 * **Кроки:**
   1. Перейти на сторінку входу.
-  2. Ввести email `customer@practicesoftwaretesting.com` у `By.cssSelector("[data-test='email']")`.
+  2. Ввести email `customer@practice.com` у `By.cssSelector("[data-test='email']")`.
   3. Ввести пароль `welcome01` у `By.cssSelector("[data-test='password']")`.
   4. Натиснути кнопку `By.cssSelector("[data-test='login-submit']")`.
 * **Очікування (WebDriverWait):** `ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test='page-title']"))`
 * **Перевірка:** Заголовок сторінки містить `"My account"`.
+* **Альтернативний сценарій (невірний пароль):** При введенні `wrong_password_123` відображається помилка у `By.cssSelector("[data-test='login-error']")`.
 
-### UI-02 (TC-010): Пошук товару за назвою у каталозі
+### UI-02 (SearchUiTest): Пошук товару у каталозі
 * **Вимога SRS:** F-40, GUI-20
-* **URL:** `https://practicesoftwaretesting.com/#/`
+* **URL:** `https://practicesoftwaretesting.com/`
 * **Кроки:**
-  1. Ввести `"Pliers"` у поле пошуку `By.cssSelector("[data-test='search-query']")`.
-  2. Натиснути `By.cssSelector("[data-test='search-submit']")`.
-* **Очікування:** `wait.until(d -> d.findElements(By.cssSelector("[data-test='product-name']")).size() > 0)`
-* **Перевірка:** Список результатів непорожній і всі назви містять `"Pliers"`.
+  1. Ввести `"Hammer"` у поле пошуку `By.cssSelector("[data-test='search-query']")`.
+  2. Натиснути кнопку `By.cssSelector("[data-test='search-submit']")`.
+* **Очікування:** `ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test='search-caption']"))`
+* **Перевірка:** Заголовок результатів містить `"Hammer"`, а список `By.cssSelector("[data-test='product-name']")` непорожній.
+* **Альтернативний сценарій (неіснуючий товар):** Запит `"NonExistingItem9999"` повертає 0 елементів.
 
-### UI-03 (TC-024): Додавання товару до кошика з картки
+### UI-03 (CartUiTest): Взаємодія з кошиком
 * **Вимога SRS:** F-80, GUI-30
-* **URL:** `https://practicesoftwaretesting.com/#/`
-* **Кроки:**
-  1. Клікнути на першу картку товару `By.cssSelector("[data-test^='product-']")`.
+* **URL:** `https://practicesoftwaretesting.com/`
+* **Кроки (Додавання товару):**
+  1. Клікнути на назву товару `By.cssSelector("[data-test='product-name']")`.
   2. Натиснути кнопку `By.cssSelector("[data-test='add-to-cart']")`.
-* **Очікування:** `ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test='cart-quantity']"))`
-* **Перевірка:** Значення лічильника кошика дорівнює `"1"`.
+* **Перевірка:** Бейдж кошика `By.cssSelector("[data-test='cart-quantity']")` відображає `"1"`.
+* **Кроки (Видалення товару):**
+  1. Перейти в кошик `By.cssSelector("[data-test='nav-cart']`)`.
+  2. Натиснути кнопку видалення `By.cssSelector(".btn-danger, [data-test='delete-product']")`.
+* **Перевірка:** Елемент `By.cssSelector("[data-test='product-title']")` стає невидимим.
 
-### UI-04 (TC-030): Оформлення замовлення (Checkout)
+### UI-04 (CheckoutUiTest): Оформлення замовлення та промокоди
 * **Вимога SRS:** F-90, GUI-40
-* **URL:** `https://practicesoftwaretesting.com/#/checkout`
-* **Кроки:**
-  1. Перейшовши до кошика, натиснути кнопку `By.cssSelector("[data-test='proceed-to-checkout']")`.
-  2. Заповнити покрокові форми адреси доставки та оплати (`By.cssSelector("[data-test='state']")`, `By.cssSelector("[data-test='postal_code']")`).
-  3. Підтвердити замовлення натисканням кнопки `By.cssSelector("[data-test='finish']")`.
-* **Очікування:** `ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test='order-confirmation']"))`
-* **Перевірка:** На екрані відображається повідомлення про успішне оформлення замовлення та номер замовлення.
+* **URL:** `https://practicesoftwaretesting.com/`
+* **Кроки (Перенаправлення неавторизованого користувача):**
+  1. Додати товар до кошика та перейти в кошик `By.cssSelector("[data-test='nav-cart']")`.
+  2. Натиснути кнопку продовження `By.cssSelector("[data-test='proceed-1']")`.
+* **Перевірка:** Відбувається редирект, заголовок `By.cssSelector("h3, [data-test='page-title']")` містить `"Login"`.
+* **Кроки (Перевірка невалідного промокоду):**
+  1. У кошику ввести `"INVALID_PROMO_2026"` у `By.cssSelector("[data-test='discount-code']")`.
+  2. Натиснути `By.cssSelector("[data-test='apply-discount']")`.
+* **Перевірка:** Відображається повідомлення про помилку у `By.cssSelector(".alert-danger, [data-test='discount-error']")`.
