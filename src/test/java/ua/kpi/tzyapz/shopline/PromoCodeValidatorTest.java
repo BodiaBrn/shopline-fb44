@@ -83,4 +83,15 @@ class PromoCodeValidatorTest {
         PromoCodeValidator.ValidationResult result = validator.validate(promo, today, new BigDecimal("1000.00"));
         assertTrue(result.valid(), "Промокод має бути валідним у день закінчення терміну");
     }
+
+    @Test
+    @DisplayName("BL-80: Успішне застосування фіксованого промокоду FIXED [Богдан Барановський]")
+    void applyFixedPromoCodeSuccess() {
+        // Arrange
+        PromoCode promo = new PromoCode("FIXED100", PromoCode.Type.FIXED, new BigDecimal("100.00"), today.plusDays(1), false, false);
+        // Act
+        BigDecimal discount = validator.apply(promo, today, new BigDecimal("500.00"));
+        // Assert
+        assertEquals(new BigDecimal("100.00"), discount, "Фіксована знижка має повертати точну суму 100.00 грн");
+    }
 }
