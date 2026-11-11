@@ -75,4 +75,13 @@ class CartTest {
         cart.changeQty("WRN-001", 3);
         assertEquals(new BigDecimal("300.00"), cart.subtotal());
     }
+    
+    @Test
+    @DisplayName("BL-40: Додавання товару з максимально допустимою кількістю [Богдан Барановський]")
+    void addItemMaxQuantitySuccess() {
+        // Arrange & Act
+        cart.addItem("WRN-001", "Ключ гайковий", new BigDecimal("100.00"), 99);
+        // Assert
+        assertEquals(99, cart.itemCount(), "Кількість елементів у кошику має дорівнювати 99");
+    }
 }
