@@ -34,3 +34,13 @@
   2. Натиснути кнопку `By.cssSelector("[data-test='add-to-cart']")`.
 * **Очікування:** `ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test='cart-quantity']"))`
 * **Перевірка:** Значення лічильника кошика дорівнює `"1"`.
+
+### UI-04 (TC-030): Оформлення замовлення (Checkout)
+* **Вимога SRS:** F-90, GUI-40
+* **URL:** `https://practicesoftwaretesting.com/#/checkout`
+* **Кроки:**
+  1. Перейшовши до кошика, натиснути кнопку `By.cssSelector("[data-test='proceed-to-checkout']")`.
+  2. Заповнити покрокові форми адреси доставки та оплати (`By.cssSelector("[data-test='state']")`, `By.cssSelector("[data-test='postal_code']")`).
+  3. Підтвердити замовлення натисканням кнопки `By.cssSelector("[data-test='finish']")`.
+* **Очікування:** `ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test='order-confirmation']"))`
+* **Перевірка:** На екрані відображається повідомлення про успішне оформлення замовлення та номер замовлення.
