@@ -18,3 +18,5 @@
 | **BL-40** | Порогова вартість доставки (1500 грн) | 1499.99 (120.00 грн), 1500.00 (0.00 грн), 1500.01 (0.00 грн) | `DiscountCalculatorTest.shippingFeeBoundaries` | Алферов Б. | Шандра О. |
 | **BL-50** | Валідація форматів промокодів | Маска [A-Z0-9]{6,10}, недійсний формат -> fail | `PromoCodeValidatorTest.invalidFormatFails` | Мулявка Я. | Шандра О. |
 | **BL-50** | Термін дії промокоду (включно) | today == expiresOn (Valid), today > expiresOn (Expired) | `PromoCodeValidatorTest.expirationDateInclusive` | Мулявка Я. | Шандра О. |
+| **BL-50** | Ініціалізація та валідація об'єкта промокоду | Перевірка створення промокоду з відсотком знижки > 0 | `PromoCodeTest.createValidPromoCode` | Мулявка Я. | Шандра О. |
+| **BL-50** | Перевірка розрахунку знижки за об'єктом промокоду | Застосування відсотка промокоду до суми кошика | `PromoCodeTest.applyPromoCodeDiscount` | Мулявка Я. | Шандра О. |
