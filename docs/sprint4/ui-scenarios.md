@@ -11,7 +11,7 @@
 * **URL:** `https://practicesoftwaretesting.com/auth/login`
 * **Кроки:**
   1. Перейти на сторінку входу.
-  2. Ввести email `customer@practice.com` у `By.cssSelector("[data-test='email']")`.
+  2. Ввести email `customer@practicesoftwaretesting.com` у `By.cssSelector("[data-test='email']")`.
   3. Ввести пароль `welcome01` у `By.cssSelector("[data-test='password']")`.
   4. Натиснути кнопку `By.cssSelector("[data-test='login-submit']")`.
 * **Очікування (WebDriverWait):** `ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test='page-title']"))`
@@ -40,14 +40,14 @@
   2. Натиснути кнопку видалення `By.cssSelector(".btn-danger, [data-test='delete-product']")`.
 * **Перевірка:** Елемент `By.cssSelector("[data-test='product-title']")` стає невидимим.
 
-### UI-04 (CheckoutUiTest): Оформлення замовлення та промокоди
+### UI-04 (CheckoutUiTest): Оформлення замовлення та валідація форм
 * **Вимога SRS:** F-90, GUI-40
 * **URL:** `https://practicesoftwaretesting.com/`
 * **Кроки (Перенаправлення неавторизованого користувача):**
   1. Додати товар до кошика та перейти в кошик `By.cssSelector("[data-test='nav-cart']")`.
   2. Натиснути кнопку продовження `By.cssSelector("[data-test='proceed-1']")`.
 * **Перевірка:** Відбувається редирект, заголовок `By.cssSelector("h3, [data-test='page-title']")` містить `"Login"`.
-* **Кроки (Перевірка невалідного промокоду):**
-  1. У кошику ввести `"INVALID_PROMO_2026"` у `By.cssSelector("[data-test='discount-code']")`.
-  2. Натиснути `By.cssSelector("[data-test='apply-discount']")`.
-* **Перевірка:** Відображається повідомлення про помилку у `By.cssSelector(".alert-danger, [data-test='discount-error']")`.
+* **Кроки (Валідація порожньої контактної форми):**
+  1. Перейти на сторінку контактів `https://practicesoftwaretesting.com/contact`.
+  2. Натиснути кнопку відправки форми `By.cssSelector("[data-test='contact-submit']")` без заповнення обов'язкових полів.
+* **Перевірка:** Відображається блок із повідомленням про помилку валідації `By.cssSelector(".alert-danger")`.

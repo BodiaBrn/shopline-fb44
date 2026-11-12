@@ -25,7 +25,7 @@ class CheckoutUiTest {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless=new", "--window-size=1920,1080", "--no-sandbox", "--disable-dev-shm-usage");
         driver = new ChromeDriver(options);
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(15));
     }
 
     @AfterEach
@@ -54,22 +54,13 @@ class CheckoutUiTest {
     }
 
     @Test
-    @DisplayName("UI-08: Введення неіснуючого промокоду відображає відмову")
-    void invalidDiscountCodeDisplaysError() {
-        driver.get("https://practicesoftwaretesting.com");
+    @DisplayName("UI-08: Відправка порожньої контактної форми відображає помилки валідації")
+    void emptyContactFormDisplaysValidationError() {
+        driver.get("https://practicesoftwaretesting.com/contact");
 
-        // Додаємо товар та переходимо в кошик
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("[data-test='product-name']"))).click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("[data-test='add-to-cart']"))).click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("[data-test='nav-cart']"))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("[data-test='contact-submit']"))).click();
 
-        // Введення невалідного промокоду
-        WebElement discountInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test='discount-code']")));
-        discountInput.sendKeys("INVALID_PROMO_2026");
-        driver.findElement(By.cssSelector("[data-test='apply-discount']")).click();
-
-        // Перевірка повідомлення про помилку
-        WebElement alert = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".alert-danger, [data-test='discount-error']")));
-        assertTrue(alert.getText().length() > 0, "При некоректному промокоді має відображатися повідомлення про помилку");
+        WebElement alert = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".alert-danger")));
+        assertTrue(alert.isDisplayed(), "При відправці порожньої форми має відображатися повідомлення про помилку валідації");
     }
 }

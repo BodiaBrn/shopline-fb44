@@ -31,7 +31,7 @@ class PromoCodeValidatorTest {
         
         // Act & Assert
         var result = validator.validate(promo, today, new BigDecimal("1000.00"));
-        assertFalse(result.isValid(), "Промокод некоректного формату повинен повертати isValid() == false");
+        assertFalse(result.valid(), "Промокод некоректного формату повинен повертати valid() == false");
     }
 
     @Test
@@ -43,7 +43,7 @@ class PromoCodeValidatorTest {
         
         // Act & Assert
         var result = validator.validate(promo, today, new BigDecimal("1000.00"));
-        assertFalse(result.isValid(), "Прострочений промокод повинен бути невалідним");
+        assertFalse(result.valid(), "Прострочений промокод повинен бути невалідним");
     }
 
     @Test
@@ -54,7 +54,7 @@ class PromoCodeValidatorTest {
         
         // Act & Assert
         var result = validator.validate(promo, today, new BigDecimal("1000.00"));
-        assertFalse(result.isValid(), "Використаний одноразовий промокод не повинен проходити валідацію");
+        assertFalse(result.valid(), "Використаний одноразовий промокод не повинен проходити валідацію");
     }
 
     @Test

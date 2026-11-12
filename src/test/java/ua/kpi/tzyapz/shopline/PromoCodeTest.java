@@ -24,7 +24,7 @@ class PromoCodeTest {
             () -> assertEquals("SALE2026", promo.code(), "Код має збігатися"),
             () -> assertEquals(PromoCode.Type.PERCENT, promo.type(), "Тип має бути PERCENT"),
             () -> assertEquals(new BigDecimal("15"), promo.value(), "Значення знижки має збігатися"),
-            () -> assertEquals(today.plusDays(10), promo.expiryDate(), "Термін дії має збігатися"),
+            () -> assertEquals(today.plusDays(10), promo.expiresOn(), "Термін дії має збігатися"),
             () -> assertFalse(promo.singleUse(), "Ознака одноразовості має бути false"),
             () -> assertFalse(promo.used(), "Ознака використання має бути false")
         );

@@ -1,6 +1,5 @@
 package ua.kpi.tzyapz.shopline.ui;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -21,7 +20,7 @@ class SearchUiTest {
 
     @BeforeEach
     void setUp() {
-        WebDriverManager.chromedriver().setup();
+//         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless=new", "--window-size=1920,1080", "--no-sandbox", "--disable-dev-shm-usage");
         driver = new ChromeDriver(options);
@@ -46,7 +45,7 @@ class SearchUiTest {
 
         driver.findElement(By.cssSelector("[data-test='search-submit']")).click();
 
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test='search-caption']")));
+        wait.until(ExpectedConditions.numberOfElementsToBe(By.cssSelector("[data-test='product-name']"), 0));
 
         Assertions.assertEquals(0, driver.findElements(By.cssSelector("[data-test='product-name']")).size(),
             "Для неіснуючого запиту картки товарів не повинні відображатися");

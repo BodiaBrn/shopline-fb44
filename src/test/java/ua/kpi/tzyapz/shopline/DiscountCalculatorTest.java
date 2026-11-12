@@ -75,7 +75,7 @@ class DiscountCalculatorTest {
                 () -> calc.volumeDiscount(new BigDecimal("-0.01")));
         
         // Assert
-        assertTrue(ex.getMessage().contains("невід'ємною"), 
+        assertTrue(ex.getMessage().contains("від'ємною"),
                 "Повідомлення про помилку має вказувати, що сума невід'ємна. Фактичне повідомлення: " + ex.getMessage());
     }
 

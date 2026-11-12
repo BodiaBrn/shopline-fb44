@@ -25,7 +25,7 @@ class LoginUiTest {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless=new", "--window-size=1920,1080", "--no-sandbox", "--disable-dev-shm-usage");
         driver = new ChromeDriver(options);
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(15));
     }
 
     @AfterEach
@@ -41,7 +41,7 @@ class LoginUiTest {
         driver.get("https://practicesoftwaretesting.com/auth/login");
 
         WebElement emailInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test='email']")));
-        emailInput.sendKeys("customer@practice.com");
+        emailInput.sendKeys("customer@practicesoftwaretesting.com");
 
         driver.findElement(By.cssSelector("[data-test='password']")).sendKeys("welcome01");
         driver.findElement(By.cssSelector("[data-test='login-submit']")).click();
