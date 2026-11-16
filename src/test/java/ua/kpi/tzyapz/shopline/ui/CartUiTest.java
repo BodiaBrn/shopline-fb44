@@ -36,14 +36,26 @@ class CartUiTest {
         }
     }
 
+    private void openFirstAvailableProduct() {
+        // Очікування завантаження карток товарів з API
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("[data-test='product-name']")));
+
+        // Пошук першої картки товару, яка не має позначки "Out of stock"
+        WebElement availableProduct = driver.findElements(By.cssSelector("a.card")).stream()
+                .filter(card -> card.findElements(By.cssSelector("[data-test='out-of-stock']")).isEmpty())
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Усі товари на першій сторінці розпродані"));
+
+        wait.until(ExpectedConditions.elementToBeClickable(availableProduct)).click();
+    }
+
     @Test
     @DisplayName("UI-05: Додавання товару з детальної сторінки оновлює бейдж кошика")
     void addProductToCartUpdatesCartQuantityBadge() {
         driver.get("https://practicesoftwaretesting.com");
 
-        // Перехід на перший товар
-        WebElement firstProduct = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("[data-test='product-name']")));
-        firstProduct.click();
+        // Перехід на перший доступний товар
+        openFirstAvailableProduct();
 
         // Клік по кнопці «Add to cart»
         WebElement addToCartBtn = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("[data-test='add-to-cart']")));
@@ -59,9 +71,8 @@ class CartUiTest {
     void removeItemFromCartClearsCartTable() {
         driver.get("https://practicesoftwaretesting.com");
 
-        // Додавання товару
-        WebElement firstProduct = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("[data-test='product-name']")));
-        firstProduct.click();
+        // Додавання першого доступного товару
+        openFirstAvailableProduct();
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("[data-test='add-to-cart']"))).click();
 
         // Перехід у кошик
