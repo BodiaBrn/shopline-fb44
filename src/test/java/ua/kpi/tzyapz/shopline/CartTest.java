@@ -18,7 +18,7 @@ class CartTest {
         cart = new Cart();
     }
 
-   @Test
+    @Test
     @DisplayName("BL-40: Порожній кошик після ініціалізації має нульовий subtotal та 0 товарів")
     void newCartIsEmpty() {
         // Arrange & Act & Assert
@@ -83,5 +83,17 @@ class CartTest {
         cart.addItem("WRN-001", "Ключ гайковий", new BigDecimal("100.00"), 99);
         // Assert
         assertEquals(99, cart.itemCount(), "Кількість елементів у кошику має дорівнювати 99");
+    }
+
+    @Test
+    @DisplayName("BL-10: Додавання 100 одиниць товару викликає IllegalArgumentException [Олександр Шандра]")
+    void addQuantityAbove99ThrowsException() {
+        // Arrange
+        BigDecimal price = new BigDecimal("50.00");
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class,
+                () -> cart.addItem("WRN-001", "Ключ гайковий", price, 100),
+                "Максимальна дозволена кількість у рядку — 99 одиниць");
     }
 }
