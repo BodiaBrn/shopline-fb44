@@ -35,13 +35,26 @@ class CheckoutUiTest {
         }
     }
 
+    private void openFirstAvailableProduct() {
+        // Очікування завантаження карток товарів з API
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("[data-test='product-name']")));
+
+        // Пошук першої картки товару, яка не має позначки "Out of stock"
+        WebElement availableProduct = driver.findElements(By.cssSelector("a.card")).stream()
+                .filter(card -> card.findElements(By.cssSelector("[data-test='out-of-stock']")).isEmpty())
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Усі товари на першій сторінці розпродані"));
+
+        wait.until(ExpectedConditions.elementToBeClickable(availableProduct)).click();
+    }
+
     @Test
     @DisplayName("UI-07: Перехід до кроків чекауту вимагає авторизації")
     void proceedToCheckoutRedirectsToLoginIfNotAuthenticated() {
         driver.get("https://practicesoftwaretesting.com");
 
-        // Додаємо товар та переходимо в кошик
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("[data-test='product-name']"))).click();
+        // Додаємо перший доступний товар та переходимо в кошик
+        openFirstAvailableProduct();
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("[data-test='add-to-cart']"))).click();
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("[data-test='nav-cart']"))).click();
 
