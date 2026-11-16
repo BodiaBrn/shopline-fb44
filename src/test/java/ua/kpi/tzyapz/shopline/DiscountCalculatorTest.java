@@ -93,6 +93,7 @@ class DiscountCalculatorTest {
         // Assert
         assertEquals(expectedDiscount, actualDiscount, "Знижка має бути рівно 1500.00 (лише 15%), а не 30% (15+10+5)");
     }
+
     @Test
     @DisplayName("BL-30: Замовлення до 2000.00 грн отримує 0% знижки (граничне значення 1999.99) [Богдан Барановський]")
     void volumeDiscountBelowFirstTierReturnsZeroPercent() {
@@ -102,5 +103,18 @@ class DiscountCalculatorTest {
         int percent = calc.volumeDiscountPercent(subtotal);
         // Assert
         assertEquals(0, percent, "Для суми 1999.99 грн знижка повинна дорівнювати 0%");
-}
+    }
+
+    @Test
+    @DisplayName("BL-50: Замовлення рівно на 5000.00 грн отримує знижку 10% [Олександр Шандра]")
+    void volumeDiscountTenPercentExactBoundary() {
+        // Arrange
+        BigDecimal subtotal = new BigDecimal("5000.00");
+
+        // Act
+        int percent = calc.volumeDiscountPercent(subtotal);
+
+        // Assert
+        assertEquals(10, percent, "Для суми рівно 5000.00 грн знижка має становити 10%");
+    }
 }
