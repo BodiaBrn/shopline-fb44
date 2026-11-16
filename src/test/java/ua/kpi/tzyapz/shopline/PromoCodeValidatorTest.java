@@ -94,4 +94,17 @@ class PromoCodeValidatorTest {
         // Assert
         assertEquals(new BigDecimal("100.00"), discount, "Фіксована знижка має повертати точну суму 100.00 грн");
     }
+
+    @Test
+    @DisplayName("BL-70: Вже використаний одноразовий промокод з актуальною датою має повертати valid() == false [Олександр Шандра]")
+    void usedSingleUsePromoCodeWithFutureDateReturnsInvalid() {
+        // Arrange
+        PromoCode promo = new PromoCode("USED2026", PromoCode.Type.PERCENT, new BigDecimal("10"), today.plusDays(5), true, true);
+
+        // Act
+        var result = validator.validate(promo, today, new BigDecimal("1000.00"));
+
+        // Assert
+        assertFalse(result.valid(), "Використаний одноразовий промокод не повинен проходити валідацію");
+    }
 }
