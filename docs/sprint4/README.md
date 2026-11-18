@@ -48,7 +48,7 @@ shopline-fb44/
 │           ├── CheckoutUiTest.java
 │           ├── LoginUiTest.java
 │           └── SearchUiTest.java
-└── pom.xml                       # Конфігурація Maven, залежності JUnit 5, Selenium та Surefire
+└── README.md                     # Інструкція збірки, запуску та опис проєкту
 ```
 
 ---
