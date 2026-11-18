@@ -1,4 +1,4 @@
-# Протокол виконання автотестів (Surefire Summary) — Спринт 4
+# Протокол виконання автотестів (Surefire Summary) – Спринт 4
 
 - **Проєкт:** `shopline-module` (`ua.kpi.tzyapz.shopline`, модуль `v1`)
 - **Дата та час запуску:** 16 листопада 2026, 11:45
@@ -44,7 +44,7 @@
 | ID дефекту | Тестовий клас та метод | Рядок | Вимога BL | Очікуваний / фактичний результат |
 |---|---|---|---|---|
 | **BUG-M1** | `CartTest.addQuantityAbove99ThrowsException` | `:95` | BL-10 | Очікувався `IllegalArgumentException` при `qty = 100`, але виняток не викинуто (у коді `MAX_QTY = 100` замість `99`). |
-| **BUG-M2 (округлення)** | `DiscountCalculatorTest.volumeDiscountRoundsHalfUp` | `:44` | BL-50 | `expected: <116.67> but was: <116.66>` — сума знижки `116.6665` (5% від `2333.33 грн`) округлена вниз (`RoundingMode.DOWN`) замість `HALF_UP`. |
-| **BUG-M2 (поріг 10%)** | `DiscountCalculatorTest.volumeDiscountTenPercentExactBoundary` | `:118` | BL-50 | `expected: <10> but was: <5>` — для суми рівно `5000.00 грн` повертається 5% замість 10% (строга нерівність `> 5000` замість `>= 5000`). |
-| **BUG-M3** | `PromoCodeValidatorTest.promoCodeValidOnExpirationDay` | `:84` | BL-70 | `expected: <true> but was: <false>` — промокод відхиляється у день закінчення терміну дії (`today == expiresOn`). |
-| **BUG-M4** | `PromoCodeValidatorTest.usedSingleUsePromoCodeWithFutureDateReturnsInvalid` | `:108` | BL-70 | `expected: <false> but was: <true>` — уже використаний одноразовий промокод (`singleUse = true, used = true`) проходить валідацію. |
+| **BUG-M2 (округлення)** | `DiscountCalculatorTest.volumeDiscountRoundsHalfUp` | `:44` | BL-50 | `expected: <116.67> but was: <116.66>` – сума знижки `116.6665` (5% від `2333.33 грн`) округлена вниз (`RoundingMode.DOWN`) замість `HALF_UP`. |
+| **BUG-M2 (поріг 10%)** | `DiscountCalculatorTest.volumeDiscountTenPercentExactBoundary` | `:118` | BL-50 | `expected: <10> but was: <5>` – для суми рівно `5000.00 грн` повертається 5% замість 10% (строга нерівність `> 5000` замість `>= 5000`). |
+| **BUG-M3** | `PromoCodeValidatorTest.promoCodeValidOnExpirationDay` | `:84` | BL-70 | `expected: <true> but was: <false>` – промокод відхиляється у день закінчення терміну дії (`today == expiresOn`). |
+| **BUG-M4** | `PromoCodeValidatorTest.usedSingleUsePromoCodeWithFutureDateReturnsInvalid` | `:108` | BL-70 | `expected: <false> but was: <true>` – уже використаний одноразовий промокод (`singleUse = true, used = true`) проходить валідацію. |
