@@ -23,6 +23,7 @@
 shopline-fb44/
 ├── docs/
 │   └── sprint4/
+│       ├── README.md             # Інструкція збірки та запуску автотестів (Богдан Алферов)
 │       ├── audit.md              # Протокол аудиту та перевірки DoD (Ярослав Мулявка)
 │       ├── coverage-matrix.md    # Матриця покриття BL-вимог юніт-тестами (Богдан Барановський)
 │       ├── retro.md              # Протокол ретроспективи (Олександр Шандра)
@@ -31,6 +32,8 @@ shopline-fb44/
 │       └── ui-scenarios.md       # Опис UI-сценаріїв та локаторів (Богдан Барановський)
 ├── selenium-ide/
 │   ├── export/                   # Експортовані чернетки Java-коду із Selenium IDE
+│   │   ├── AddToCartTest.java
+│   │   └── SearchHammerTest.java
 │   └── shopline.side             # Записані сценарії у форматі Selenium IDE
 ├── src/
 │   ├── main/java/ua/kpi/tzyapz/shopline/
@@ -48,7 +51,8 @@ shopline-fb44/
 │           ├── CheckoutUiTest.java
 │           ├── LoginUiTest.java
 │           └── SearchUiTest.java
-└── README.md                     # Інструкція збірки, запуску та опис проєкту
+├── .gitignore                    # Виключення target/, .idea/ та системних файлів із Git
+└── pom.xml                       # Конфігурація Maven, залежності JUnit 5, Selenium та Surefire
 ```
 
 ---
