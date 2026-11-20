@@ -76,7 +76,7 @@ class PromoCodeValidatorTest {
     }
 
     @Test
-    @DisplayName("BL-70: Промокод у день закінчення терміну дії має бути валідним (BUG-M3) [Богдан Алферов]")
+    @DisplayName("BL-70: Промокод у день закінчення терміну дії має бути валідним (BUG-MOD-003, #15) [Богдан Алферов]")
     void promoCodeValidOnExpirationDay() {
         // Промокод діє до 'today' включно
         PromoCode promo = new PromoCode("TODAY10", PromoCode.Type.PERCENT, new BigDecimal("10"), today, false, false);
