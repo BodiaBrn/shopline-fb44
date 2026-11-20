@@ -10,9 +10,10 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
 
 @Tag("ui")
-@DisplayName("UI-тести пошуку товарів у ShopLine Toolshop (Вадим Костюк)")
+@DisplayName("UI-тести пошуку товарів у ShopLine Toolshop [Вадим Костюк]")
 class SearchUiTest {
 
     private WebDriver driver;
@@ -20,7 +21,6 @@ class SearchUiTest {
 
     @BeforeEach
     void setUp() {
-//         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless=new", "--window-size=1920,1080", "--no-sandbox", "--disable-dev-shm-usage");
         driver = new ChromeDriver(options);
@@ -33,45 +33,53 @@ class SearchUiTest {
             driver.quit();
         }
     }
+
     @Test
-    @DisplayName("UI-02: Пошук неіснуючого товару повертає порожній список")
-    void searchNonExistingProductReturnsEmptyList() {
+    @DisplayName("UI-01 [TC-016]: Пошук товару без урахування регістру ('PLIERS') повертає відповідні картки")
+    void searchPliersCaseInsensitiveReturnsResults() {
+        // Arrange
         driver.get("https://practicesoftwaretesting.com");
 
+        // Act
+        WebElement searchInput = wait.until(
+            ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test='search-query']"))
+        );
+        searchInput.sendKeys("PLIERS");
+        driver.findElement(By.cssSelector("[data-test='search-submit']")).click();
+
+        // Assert
+        WebElement searchCaption = wait.until(
+            ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test='search-caption']"))
+        );
+        List<WebElement> products = wait.until(
+            ExpectedConditions.numberOfElementsToBeMoreThan(By.cssSelector("[data-test='product-name']"), 0)
+        );
+
+        Assertions.assertAll("Перевірка результатів регістронезалежного пошуку 'PLIERS'",
+            () -> Assertions.assertTrue(searchCaption.getText().toLowerCase().contains("pliers"),
+                "Заголовок результатів має містити запит 'PLIERS'"),
+            () -> Assertions.assertTrue(
+                products.stream().anyMatch(el -> el.getText().toLowerCase().contains("pliers")),
+                "Серед знайдених карток повинні бути товари з назвою 'Pliers'")
+        );
+    }
+
+    @Test
+    @DisplayName("UI-02 [TC-017]: Пошук неіснуючого товару повертає порожній список")
+    void searchNonExistingProductReturnsEmptyList() {
+        // Arrange
+        driver.get("https://practicesoftwaretesting.com");
+
+        // Act
         WebElement searchInput = wait.until(
             ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test='search-query']"))
         );
         searchInput.sendKeys("NonExistingItem9999");
-
         driver.findElement(By.cssSelector("[data-test='search-submit']")).click();
 
+        // Assert
         wait.until(ExpectedConditions.numberOfElementsToBe(By.cssSelector("[data-test='product-name']"), 0));
-
         Assertions.assertEquals(0, driver.findElements(By.cssSelector("[data-test='product-name']")).size(),
             "Для неіснуючого запиту картки товарів не повинні відображатися");
-    }
-
-    @Test
-    @DisplayName("UI-01: Пошук інструмента 'Hammer' повертає відповідні картки товару")
-    void searchHammerReturnsResults() {
-        // Arrange
-        driver.get("https://practicesoftwaretesting.com");
-
-        // Act: очікування поля пошуку та введення запиту
-        WebElement searchInput = wait.until(
-            ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test='search-query']"))
-        );
-        searchInput.sendKeys("Hammer");
-
-        WebElement searchButton = driver.findElement(By.cssSelector("[data-test='search-submit']"));
-        searchButton.click();
-
-        // Assert: перевірка заголовка результатів та наявності товарів
-        WebElement searchCaption = wait.until(
-            ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test='search-caption']"))
-        );
-
-        Assertions.assertTrue(searchCaption.getText().contains("Hammer"), "Заголовок результатів повинен містити 'Hammer'");
-        Assertions.assertTrue(driver.findElements(By.cssSelector("[data-test='product-name']")).size() > 0, "Картки товарів мають бути присутніми у вибірці");
     }
 }
