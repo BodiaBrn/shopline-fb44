@@ -108,3 +108,43 @@ class PromoCodeValidatorTest {
         assertFalse(result.valid(), "Використаний одноразовий промокод не повинен проходити валідацію");
     }
 }
+@Test
+    @DisplayName("BL-70: Граничні довжини коду 6 та 10 символів проходять валідацію [Вадим Костюк]")
+    void validCodeLengthBoundaries6And10PassValidation() {
+        // Arrange
+        PromoCode minLenCode = new PromoCode("SALE10", PromoCode.Type.PERCENT, new BigDecimal("10"), today.plusDays(1), false, false);
+        PromoCode maxLenCode = new PromoCode("SUMMER2026", PromoCode.Type.PERCENT, new BigDecimal("10"), today.plusDays(1), false, false);
+
+        // Act & Assert
+        assertAll("Перевірка допустимих меж довжини промокоду (6 і 10 символів)",
+            () -> assertTrue(validator.validate(minLenCode, today, new BigDecimal("1000.00")).valid(), "Довжина 6 символів має бути валідною"),
+            () -> assertTrue(validator.validate(maxLenCode, today, new BigDecimal("1000.00")).valid(), "Довжина 10 символів має бути валідною")
+        );
+    }
+
+    @Test
+    @DisplayName("BL-70: Граничні значення відсоткової знижки 1% та 50% є валідними [Вадим Костюк]")
+    void validPercentRangeBoundaries1And50PassValidation() {
+        // Arrange
+        PromoCode minPercent = new PromoCode("MIN001", PromoCode.Type.PERCENT, new BigDecimal("1"), today.plusDays(1), false, false);
+        PromoCode maxPercent = new PromoCode("MAX050", PromoCode.Type.PERCENT, new BigDecimal("50"), today.plusDays(1), false, false);
+
+        // Act & Assert
+        assertAll("Перевірка допустимого діапазону 1..50%",
+            () -> assertTrue(validator.validate(minPercent, today, new BigDecimal("1000.00")).valid(), "Знижка 1% має бути валідною"),
+            () -> assertTrue(validator.validate(maxPercent, today, new BigDecimal("1000.00")).valid(), "Знижка 50% має бути валідною")
+        );
+    }
+
+    @ParameterizedTest(name = "BL-70: Відсоткова знижка {0}% поза діапазоном 1..50 не проходить валідацію [Вадим Костюк]")
+    @ValueSource(strings = {"0", "51"})
+    void outOfRangePercentFailsValidation(String invalidPercent) {
+        // Arrange
+        PromoCode promo = new PromoCode("OUTRNG", PromoCode.Type.PERCENT, new BigDecimal(invalidPercent), today.plusDays(1), false, false);
+
+        // Act
+        var result = validator.validate(promo, today, new BigDecimal("1000.00"));
+
+        // Assert
+        assertFalse(result.valid(), "Відсоток " + invalidPercent + "% поза межами 1..50 має відхилятися");
+    }
