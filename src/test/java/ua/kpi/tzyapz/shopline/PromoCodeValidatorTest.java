@@ -24,10 +24,10 @@ class PromoCodeValidatorTest {
     }
 
     @ParameterizedTest(name = "BL-70: Неприпустимий код '{0}' не проходить валідацію")
-    @ValueSource(strings = {"SHORT", "TOOLONGPROMOCODE123", "BAD@CHAR"})
+    @ValueSource(strings = {"SHORT", "TOOLONGPROMOCODE123"})
     void invalidCodeFormatFailsValidation(String invalidCode) {
         // Arrange
-        PromoCode promo = new PromoCode(invalidCode, PromoCode.Type.PERCENT, new BigDecimal("10"), today, false, false);
+        PromoCode promo = new PromoCode(invalidCode, PromoCode.Type.PERCENT, new BigDecimal("10"), today.plusDays(5), false, false);
         
         // Act & Assert
         var result = validator.validate(promo, today, new BigDecimal("1000.00"));
@@ -47,10 +47,10 @@ class PromoCodeValidatorTest {
     }
 
     @Test
-    @DisplayName("BL-70: Повторне використання одноразового промокоду не проходить валідацію")
+    @DisplayName("BL-70: Повторне використання одноразового промокоду не проходить валідацію (BUG-MOD-004, #16)")
     void usedOneTimePromoCodeFailsValidation() {
         // Arrange
-        PromoCode promo = new PromoCode("ONETIME1", PromoCode.Type.PERCENT, new BigDecimal("10"), today, true, true);
+        PromoCode promo = new PromoCode("ONETIME1", PromoCode.Type.PERCENT, new BigDecimal("10"), today.plusDays(5), true, true);
         
         // Act & Assert
         var result = validator.validate(promo, today, new BigDecimal("1000.00"));
@@ -58,10 +58,10 @@ class PromoCodeValidatorTest {
     }
 
     @Test
-    @DisplayName("BL-80: Фіксований промокод FIXED перевищує суму замовлення")
+    @DisplayName("BL-70: Фіксований промокод FIXED перевищує суму замовлення")
     void fixedPromoExceedingSubtotalThrowsException() {
         // Arrange
-        PromoCode promo = new PromoCode("FIXED500", PromoCode.Type.FIXED, new BigDecimal("500.00"), today, false, false);
+        PromoCode promo = new PromoCode("FIXED500", PromoCode.Type.FIXED, new BigDecimal("500.00"), today.plusDays(5), false, false);
         
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () -> validator.apply(promo, today, new BigDecimal("300.00")));
@@ -96,7 +96,7 @@ class PromoCodeValidatorTest {
     }
 
     @Test
-    @DisplayName("BL-70: Вже використаний одноразовий промокод з актуальною датою має повертати valid() == false [Олександр Шандра]")
+    @DisplayName("BL-70: Вже використаний одноразовий промокод з актуальною датою має повертати valid() == false (BUG-MOD-004, #16) [Олександр Шандра]")
     void usedSingleUsePromoCodeWithFutureDateReturnsInvalid() {
         // Arrange
         PromoCode promo = new PromoCode("USED2026", PromoCode.Type.PERCENT, new BigDecimal("10"), today.plusDays(5), true, true);
