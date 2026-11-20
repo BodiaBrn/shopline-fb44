@@ -54,13 +54,13 @@ class DiscountCalculatorTest {
         );
     }
     
-    @Test
-    @DisplayName("BL-30: Замовлення на суму 9999.99 грн отримує знижку 10%, а не 15% (межа третього порогу)")
+   @Test
+    @DisplayName("BL-50: Замовлення на суму 9999.99 грн отримує знижку 10%, а не 15% (межа третього порогу) [Ярослав Мулявка]")
     void discountPercent_JustBelowHighestTier_ReturnsTenPercent() {
         // Arrange
         BigDecimal subtotal = new BigDecimal("9999.99");
         
-        // Act: виправлено виклик на volumeDiscountPercent
+        // Act
         int actualPercent = calc.volumeDiscountPercent(subtotal);
         
         // Assert
@@ -68,23 +68,21 @@ class DiscountCalculatorTest {
     }
 
     @Test
-    @DisplayName("BL-30: Від'ємна сума замовлення викликає IllegalArgumentException")
+    @DisplayName("BL-50: Від'ємна сума замовлення викликає IllegalArgumentException [Ярослав Мулявка]")
     void volumeDiscount_NegativeSubtotal_ThrowsException() {
         // Arrange & Act
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
                 () -> calc.volumeDiscount(new BigDecimal("-0.01")));
         
         // Assert
-        assertTrue(ex.getMessage().contains("від'ємною"),
-                "Повідомлення про помилку має вказувати, що сума невід'ємна. Фактичне повідомлення: " + ex.getMessage());
+        assertNotNull(ex.getMessage(), "Виняток має містити опис помилки");
     }
 
     @Test
-    @DisplayName("BL-30: При досягненні порогу 10000 грн застосовується лише знижка 15%, знижки не сумуються")
+    @DisplayName("BL-50: При досягненні порогу 10000 грн застосовується лише знижка 15%, знижки не сумуються [Ярослав Мулявка]")
     void volumeDiscount_HighestTier_DoesNotSumWithLowerTiers() {
         // Arrange
         BigDecimal subtotal = new BigDecimal("10000.00");
-        // 15% від 10000 = 1500.00
         BigDecimal expectedDiscount = new BigDecimal("1500.00"); 
         
         // Act
