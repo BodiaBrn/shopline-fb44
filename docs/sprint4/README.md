@@ -61,7 +61,7 @@ shopline-fb44/
 
 ### Крок 1. Клонування репозиторію
 ```bash
-git clone [https://github.com/BodiaBrn/shopline-fb44.git](https://github.com/BodiaBrn/shopline-fb44.git)
+git clone https://github.com/BodiaBrn/shopline-fb44.git
 cd shopline-fb44
 ```
 
