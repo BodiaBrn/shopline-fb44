@@ -2,6 +2,7 @@ package ua.kpi.tzyapz.shopline.ui;
 
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -9,13 +10,14 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Tag("ui")
-@DisplayName("UI-тести кошика товарів")
+@DisplayName("UI-тести кошика товарів [Вадим Костюк]")
 class CartUiTest {
 
     private WebDriver driver;
@@ -37,10 +39,8 @@ class CartUiTest {
     }
 
     private void openFirstAvailableProduct() {
-        // Очікування завантаження карток товарів з API
         wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("[data-test='product-name']")));
 
-        // Пошук першої картки товару, яка не має позначки "Out of stock"
         WebElement availableProduct = driver.findElements(By.cssSelector("a.card")).stream()
                 .filter(card -> card.findElements(By.cssSelector("[data-test='out-of-stock']")).isEmpty())
                 .findFirst()
@@ -49,41 +49,53 @@ class CartUiTest {
         wait.until(ExpectedConditions.elementToBeClickable(availableProduct)).click();
     }
 
+    private BigDecimal parsePrice(String priceText) {
+        String cleaned = priceText.replaceAll("[^0-9.]", "");
+        return new BigDecimal(cleaned).setScale(2, RoundingMode.HALF_UP);
+    }
+
     @Test
-    @DisplayName("UI-05: Додавання товару з детальної сторінки оновлює бейдж кошика")
+    @DisplayName("UI-05 [TC-026]: Додавання товару з детальної сторінки оновлює бейдж кошика")
     void addProductToCartUpdatesCartQuantityBadge() {
+        // Arrange
         driver.get("https://practicesoftwaretesting.com");
 
-        // Перехід на перший доступний товар
+        // Act
         openFirstAvailableProduct();
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("[data-test='add-to-cart']"))).click();
 
-        // Клік по кнопці «Add to cart»
-        WebElement addToCartBtn = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("[data-test='add-to-cart']")));
-        addToCartBtn.click();
-
-        // Перевірка лічильника кошика в шапці
+        // Assert
         WebElement cartQuantity = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test='cart-quantity']")));
         assertEquals("1", cartQuantity.getText().trim(), "Кількість товарів у шапці кошика має дорівнювати 1");
     }
 
     @Test
-    @DisplayName("UI-06: Видалення позиції з кошика очищає список")
-    void removeItemFromCartClearsCartTable() {
+    @DisplayName("UI-06 [TC-031]: Зміна кількості товару в кошику перераховує вартість рядка та підсумок")
+    void changeItemQuantityInCartRecalculatesTotal() {
+        // Arrange
         driver.get("https://practicesoftwaretesting.com");
-
-        // Додавання першого доступного товару
         openFirstAvailableProduct();
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("[data-test='add-to-cart']"))).click();
-
-        // Перехід у кошик
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test='cart-quantity']")));
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("[data-test='nav-cart']"))).click();
 
-        // Видалення товару з кошика
-        WebElement deleteBtn = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(".btn-danger, [data-test='delete-product']")));
-        deleteBtn.click();
+        WebElement unitPriceEl = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test='product-price']")));
+        BigDecimal unitPrice = parsePrice(unitPriceEl.getText());
+        BigDecimal expectedTotal = unitPrice.multiply(BigDecimal.valueOf(2)).setScale(2, RoundingMode.HALF_UP);
+        String oldTotalText = driver.findElement(By.cssSelector("[data-test='cart-total']")).getText().trim();
 
-        // Перевірка порожнього кошика
-        boolean isCartEmpty = wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("[data-test='product-title']")));
-        assertTrue(isCartEmpty, "Після видалення елемента таблиця кошика має бути порожньою");
+        // Act: зміна кількості з 1 на 2
+        WebElement qtyInput = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("[data-test='product-quantity']")));
+        qtyInput.sendKeys(Keys.chord(Keys.CONTROL, "a"), "2", Keys.ENTER);
+
+        // Assert: очікування оновлення суми кошика та перевірка перерахунку
+        wait.until(d -> !d.findElement(By.cssSelector("[data-test='cart-total']")).getText().trim().equals(oldTotalText));
+        BigDecimal actualLineTotal = parsePrice(driver.findElement(By.cssSelector("[data-test='line-price']")).getText());
+        BigDecimal actualCartTotal = parsePrice(driver.findElement(By.cssSelector("[data-test='cart-total']")).getText());
+
+        Assertions.assertAll("Перевірка перерахунку суми після зміни кількості на 2",
+            () -> assertEquals(expectedTotal, actualLineTotal, "Вартість рядка має дорівнювати ціні × 2"),
+            () -> assertEquals(expectedTotal, actualCartTotal, "Загальний підсумок кошика має дорівнювати ціні × 2")
+        );
     }
 }
