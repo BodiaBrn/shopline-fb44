@@ -7,7 +7,19 @@
 
 ---
 
-## 1. Прогін модульних тестів (Unit Tests)
+## 1. Виконання нормативів спринту (План / Факт – склад 5 осіб)
+
+| Показник / Артефакт | План (норматив «5») | Факт | Статус |
+|---|---|---|---|
+| Модульні тести (JUnit 5) | ≥ 20 методів | 26 методів (28 прогонів у Surefire) | Виконано |
+| Внесок кожного учасника | ≥ 3 юніт-тести | 10 / 6 / 4 / 3 / 3 | Виконано |
+| UI-тести (Selenium WebDriver, `@Tag("ui")`) | ≥ 8 сценаріїв | 8 тест-методів (`UI-01` – `UI-08`) | Виконано |
+| Записані сценарії Selenium IDE | 1–2 сценарії | 2 сценарії (`shopline.side` + експорт) | Виконано |
+| Виявлені дефекти модуля `v1` (мітка `module`) | ≥ 5 дефектів | 5 дефектів (`BUG-MOD-001` – `BUG-MOD-005`) | Виконано |
+
+---
+
+## 2. Прогін модульних тестів (Unit Tests)
 
 - **Команда запуску:** `mvn clean test`
 - **Підсумок Surefire:** `Tests run: 28, Failures: 5, Errors: 0, Skipped: 0` (час виконання: `2.931 s`)
@@ -24,7 +36,7 @@
 
 ---
 
-## 2. Прогін UI-тестів (Selenium WebDriver)
+## 3. Прогін UI-тестів (Selenium WebDriver)
 
 - **Команда запуску:** `mvn test -Dgroups=ui -DexcludedGroups=""`
 - **Підсумок Surefire:** `Tests run: 8, Failures: 0, Errors: 0, Skipped: 0` (час виконання: `30.131 s`, `BUILD SUCCESS`)
@@ -39,12 +51,21 @@
 
 ---
 
-## 3. Список `failed` тестів та виявлених дефектів модуля `v1` (мітка `module`)
+## 4. Список `failed` тестів та виявлених дефектів модуля `v1` (GitHub Issues `#13`–`#17`)
 
-| ID дефекту | Тестовий клас та метод | Рядок | Вимога BL | Очікуваний / фактичний результат |
-|---|---|---|---|---|
-| **BUG-M1** | `CartTest.addQuantityAbove99ThrowsException` | `:95` | BL-10 | Очікувався `IllegalArgumentException` при `qty = 100`, але виняток не викинуто (у коді `MAX_QTY = 100` замість `99`). |
-| **BUG-M2 (округлення)** | `DiscountCalculatorTest.volumeDiscountRoundsHalfUp` | `:44` | BL-50 | `expected: <116.67> but was: <116.66>` – сума знижки `116.6665` (5% від `2333.33 грн`) округлена вниз (`RoundingMode.DOWN`) замість `HALF_UP`. |
-| **BUG-M2 (поріг 10%)** | `DiscountCalculatorTest.volumeDiscountTenPercentExactBoundary` | `:118` | BL-50 | `expected: <10> but was: <5>` – для суми рівно `5000.00 грн` повертається 5% замість 10% (строга нерівність `> 5000` замість `>= 5000`). |
-| **BUG-M3** | `PromoCodeValidatorTest.promoCodeValidOnExpirationDay` | `:84` | BL-70 | `expected: <true> but was: <false>` – промокод відхиляється у день закінчення терміну дії (`today == expiresOn`). |
-| **BUG-M4** | `PromoCodeValidatorTest.usedSingleUsePromoCodeWithFutureDateReturnsInvalid` | `:108` | BL-70 | `expected: <false> but was: <true>` – уже використаний одноразовий промокод (`singleUse = true, used = true`) проходить валідацію. |
+| ID дефекту (Issue) | Тестовий клас та метод | Рядок | Вимога BL | Severity | Очікуваний / фактичний результат |
+|---|---|---|---|---|---|
+| **BUG-MOD-001** (`#13`) | `DiscountCalculatorTest.volumeDiscountRoundsHalfUp` | `:44` | BL-50 | Major | `expected: <116.67> but was: <116.66>` – сума знижки `116.6665` (5% від `2333.33 грн`) округлена вниз (`RoundingMode.DOWN`) замість `HALF_UP`. |
+| **BUG-MOD-002** (`#14`) | `DiscountCalculatorTest.volumeDiscountTenPercentExactBoundary` | `:118` | BL-50 | Major | `expected: <10> but was: <5>` – для суми рівно `5000.00 грн` повертається 5% замість 10% (строга нерівність `> 5000` замість `>= 5000`). |
+| **BUG-MOD-003** (`#15`) | `PromoCodeValidatorTest.promoCodeValidOnExpirationDay` | `:84` | BL-70 | Major | `expected: <true> but was: <false>` – промокод відхиляється у день закінчення терміну дії (`today == expiresOn`). |
+| **BUG-MOD-004** (`#16`) | `PromoCodeValidatorTest.usedSingleUsePromoCodeWithFutureDateReturnsInvalid` | `:108` | BL-70 | Critical | `expected: <false> but was: <true>` – уже використаний одноразовий промокод (`singleUse = true, used = true`) проходить валідацію. |
+| **BUG-MOD-005** (`#17`) | `CartTest.addQuantityAbove99ThrowsException` | `:95` | BL-10 | Minor | Очікувався `IllegalArgumentException` при `qty = 100`, але виняток не викинуто (у коді `MAX_QTY = 100` замість `99`). |
+
+---
+
+## 5. Висновок про стан модуля `v1`
+
+Модуль бізнес-логіки `shopline-module` версії `v1` **не готовий до релізу в продуктивне середовище (Not Ready for Release)** і потребує виправлення 5 виявлених дефектів (`BUG-MOD-001` — `BUG-MOD-005`, Issues `#13`–`#17`):
+- **Фінансові та бізнес-ризики:** Некоректне округлення знижок (`BUG-MOD-001`), помилка граничної умови на порозі 5000 грн (`BUG-MOD-002`) та можливість повторного застосування одноразових промокодів (`BUG-MOD-004`) призводять до прямих фінансових втрат магазину.
+- **Логічні обмеження:** Відхилення валідного промокоду в останній день дії (`BUG-MOD-003`) погіршує клієнтський досвід, а перевищення ліміту кількості товару в рядку кошика (`BUG-MOD-005`) порушує специфікацію `BL-10`.
+- **Рекомендація:** Передати дефекти `#13`–`#17` на виправлення у версію модуля `v2`, після чого виконати повторний регресійний прогін набору модульних тестів (`mvn clean test` має завершитися зі статусом `BUILD SUCCESS`, `Failures: 0`).
