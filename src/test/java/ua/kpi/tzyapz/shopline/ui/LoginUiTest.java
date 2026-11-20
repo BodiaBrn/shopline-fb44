@@ -14,7 +14,7 @@ import java.time.Duration;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Tag("ui")
-@DisplayName("UI-тести авторизації користувача [Богдан Алферов]")
+@DisplayName("UI-тести авторизації користувача [Богдан Алферов / Вадим Костюк]")
 class LoginUiTest {
 
     private WebDriver driver;
@@ -36,32 +36,37 @@ class LoginUiTest {
     }
 
     @Test
-    @DisplayName("UI-03: Успішна авторизація з валідними обліковими даними")
+    @DisplayName("UI-03 [TC-005]: Успішна авторизація з валідними обліковими даними")
     void loginWithValidCredentialsSuccess() {
+        // Arrange
         driver.get("https://practicesoftwaretesting.com/auth/login");
 
+        // Act
         WebElement emailInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test='email']")));
         emailInput.sendKeys("customer@practicesoftwaretesting.com");
-
         driver.findElement(By.cssSelector("[data-test='password']")).sendKeys("welcome01");
         driver.findElement(By.cssSelector("[data-test='login-submit']")).click();
 
+        // Assert
         WebElement pageTitle = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test='page-title']")));
         assertTrue(pageTitle.getText().contains("My account"), "Після успішного входу має відкритися сторінка кабінету");
     }
 
     @Test
-    @DisplayName("UI-04: Спроба авторизації з невірним паролем відображає помилку")
+    @DisplayName("UI-04 [TC-006]: Спроба авторизації зареєстрованого користувача з невірним паролем відображає помилку")
     void loginWithInvalidPasswordShowsError() {
+        // Arrange
         driver.get("https://practicesoftwaretesting.com/auth/login");
 
+        // Act
         WebElement emailInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test='email']")));
-        emailInput.sendKeys("customer@practice.com");
-
+        emailInput.sendKeys("customer@practicesoftwaretesting.com");
         driver.findElement(By.cssSelector("[data-test='password']")).sendKeys("wrong_password_123");
         driver.findElement(By.cssSelector("[data-test='login-submit']")).click();
 
+        // Assert
         WebElement errorMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test='login-error']")));
-        assertTrue(errorMessage.getText().contains("Invalid email or password"), "Має відображатися повідомлення про невірний логін/пароль");
+        assertTrue(errorMessage.getText().contains("Invalid email or password"),
+            "Має відображатися повідомлення про невірний логін/пароль");
     }
 }
