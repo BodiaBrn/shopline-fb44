@@ -3,12 +3,15 @@ package ua.kpi.tzyapz.shopline;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.math.BigDecimal;
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DisplayName("Cart — операції з кошиком товарів (BL-40) [Вадим Костюк]")
+@DisplayName("Cart — операції з кошиком товарів (BL-10, BL-40)")
 class CartTest {
 
     private Cart cart;
@@ -19,7 +22,7 @@ class CartTest {
     }
 
     @Test
-    @DisplayName("BL-40: Порожній кошик після ініціалізації має нульовий subtotal та 0 товарів")
+    @DisplayName("BL-40: Порожній кошик після ініціалізації має subtotal 0.00 та 0 товарів [Вадим Костюк]")
     void newCartIsEmpty() {
         // Arrange & Act & Assert
         assertAll("Перевірка початкового стану кошика",
@@ -29,7 +32,7 @@ class CartTest {
     }
 
     @Test
-    @DisplayName("BL-40: Додавання товару збільшує subtotal та кількість позицій")
+    @DisplayName("BL-10: Додавання валідного товару збільшує subtotal та кількість позицій [Вадим Костюк]")
     void addItemIncreasesSubtotalAndCount() {
         // Arrange
         BigDecimal price = new BigDecimal("250.00");
@@ -46,15 +49,66 @@ class CartTest {
     }
 
     @Test
-    @DisplayName("BL-40: Додавання товару з нульовою або від'ємною кількістю викликає виняток")
+    @DisplayName("BL-10: Додавання товару з нульовою кількістю викликає IllegalArgumentException [Вадим Костюк]")
     void addInvalidQuantityThrowsException() {
         // Arrange
         BigDecimal price = new BigDecimal("150.00");
 
         // Act & Assert
-        assertThrows(IllegalArgumentException.class, () -> {
-            cart.addItem("DRL-002", "Свердло по металу", price, 0);
-        }, "Кількість товару <= 0 має викликати IllegalArgumentException");
+        assertThrows(IllegalArgumentException.class,
+                () -> cart.addItem("DRL-002", "Свердло по металу", price, 0),
+                "Кількість товару <= 0 має викликати IllegalArgumentException");
+    }
+
+    @ParameterizedTest(name = "BL-10: Неприпустима ціна {0} викликає IllegalArgumentException [Вадим Костюк]")
+    @ValueSource(strings = {"0.00", "-0.01"})
+    void addItemWithNonPositivePriceThrowsException(String invalidPrice) {
+        // Arrange
+        BigDecimal price = new BigDecimal(invalidPrice);
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class,
+                () -> cart.addItem("HAM-010", "Молоток", price, 1),
+                "Ціна товару має бути строго більшою за 0");
+    }
+
+    @Test
+    @DisplayName("BL-10: Порожній або null артикул sku викликає IllegalArgumentException [Вадим Костюк]")
+    void addItemWithBlankOrNullSkuThrowsException() {
+        // Arrange
+        BigDecimal price = new BigDecimal("100.00");
+
+        // Act & Assert
+        assertAll("Перевірка некоректного SKU",
+            () -> assertThrows(IllegalArgumentException.class, () -> cart.addItem(null, "Молоток", price, 1)),
+            () -> assertThrows(IllegalArgumentException.class, () -> cart.addItem("   ", "Молоток", price, 1))
+        );
+    }
+
+    @Test
+    @DisplayName("BL-40: Видалення або зміна кількості неіснуючого sku викликає NoSuchElementException [Вадим Костюк]")
+    void operationsOnMissingSkuThrowNoSuchElementException() {
+        // Arrange, Act & Assert
+        assertAll("Перевірка звернення до відсутнього артикула",
+            () -> assertThrows(NoSuchElementException.class, () -> cart.removeItem("UNKNOWN-SKU")),
+            () -> assertThrows(NoSuchElementException.class, () -> cart.changeQty("UNKNOWN-SKU", 2))
+        );
+    }
+
+    @Test
+    @DisplayName("BL-40: Граничні значення changeQty (qty = 0 викликає виняток, qty = 1 та 99 дозволені) [Вадим Костюк]")
+    void changeQtyBoundaryValues() {
+        // Arrange
+        cart.addItem("WRN-001", "Ключ гайковий", new BigDecimal("10.00"), 5);
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> cart.changeQty("WRN-001", 0));
+
+        cart.changeQty("WRN-001", 1);
+        assertEquals(1, cart.qtyOf("WRN-001"));
+
+        cart.changeQty("WRN-001", 99);
+        assertEquals(99, cart.qtyOf("WRN-001"));
     }
 
     @Test
@@ -75,9 +129,9 @@ class CartTest {
         cart.changeQty("WRN-001", 3);
         assertEquals(new BigDecimal("300.00"), cart.subtotal());
     }
-    
+
     @Test
-    @DisplayName("BL-40: Додавання товару з максимально допустимою кількістю [Богдан Барановський]")
+    @DisplayName("BL-10: Додавання товару з максимально допустимою кількістю 99 [Богдан Барановський]")
     void addItemMaxQuantitySuccess() {
         // Arrange & Act
         cart.addItem("WRN-001", "Ключ гайковий", new BigDecimal("100.00"), 99);
@@ -86,12 +140,11 @@ class CartTest {
     }
 
     @Test
-    @DisplayName("BL-10: Додавання 100 одиниць товару викликає IllegalArgumentException [Олександр Шандра]")
+    @DisplayName("BL-10: Додавання 100 одиниць товару викликає IllegalArgumentException (#17 / BUG-MOD-005) [Олександр Шандра]")
     void addQuantityAbove99ThrowsException() {
-        // Arrange
+        // Дефект v1: GitHub Issue #17 (BUG-MOD-005) — MAX_QTY = 100 замість 99
         BigDecimal price = new BigDecimal("50.00");
 
-        // Act & Assert
         assertThrows(IllegalArgumentException.class,
                 () -> cart.addItem("WRN-001", "Ключ гайковий", price, 100),
                 "Максимальна дозволена кількість у рядку — 99 одиниць");
