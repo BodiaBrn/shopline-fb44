@@ -3,17 +3,17 @@
 **Команда:** ФБ-44  
 **Тема:** Автоматизація тестування бізнес-логіки та веб-інтерфейсу (JUnit 5 + Selenium WebDriver)  
 **Тестований модуль:** `ua.kpi.tzyapz:shopline-module` (`v1`) – кошик, знижки за обсяг, доставка та промокоди  
-**Тестовий UI-стенд:** [https://practicesoftwaretesting.com](https://practicesoftwaretesting.com)
+**Тестовий UI-стенд:** https://practicesoftwaretesting.com
 
 ---
 
 ## 1. Вимоги до середовища (Prerequisites)
 
 Для збірки проєкту та запуску автотестів «з нуля» на машині мають бути встановлені:
-* **Java Development Kit (JDK):** версія **17** або вище (з налаштованою змінною `JAVA_HOME`).
-* **Apache Maven:** версія **3.9+** (доданий у системний `PATH`).
-* **Браузер:** Google Chrome / Chromium актуальної версії (драйвер керується автоматично через Selenium Manager; тести запускаються у режимі `--headless=new`).
-* **Git** та доступ до інтернету (для завантаження Maven-залежностей і проходження UI-тестів на зовнішньому стенді).
+- **Java Development Kit (JDK):** версія **17** або вище (з налаштованою змінною `JAVA_HOME`).
+- **Apache Maven:** версія **3.9+** (доданий у системний `PATH`).
+- **Браузер:** Google Chrome / Chromium актуальної версії (драйвер керується автоматично через Selenium Manager; тести запускаються у режимі `--headless=new`).
+- **Git** та доступ до інтернету (для завантаження Maven-залежностей і проходження UI-тестів на зовнішньому стенді).
 
 ---
 
@@ -70,29 +70,29 @@ cd shopline-fb44
 ```bash
 mvn clean test
 ```
-* **Очікуваний результат:** `Tests run: 28, Failures: 5, Errors: 0, Skipped: 0`.  
-* **Примітка щодо статусу `BUILD FAILURE`:** Падіння 5 юніт-тестів є очікуваним і підтверджує виявлення закладених дефектів модуля `v1` (`BUG-M1` – `BUG-M4`), зафіксованих у GitHub Issues з міткою `module` та у протоколі `surefire-summary.md`.
+- **Очікуваний результат:** `Tests run: 28, Failures: 5, Errors: 0, Skipped: 0`.  
+- **Примітка щодо статусу `BUILD FAILURE`:** Падіння 5 юніт-тестів є очікуваним і підтверджує виявлення закладених дефектів модуля `v1` (`BUG-MOD-001` – `BUG-MOD-005`, Issues `#13`–`#17`), зафіксованих у GitHub Issues з міткою `module` та у протоколі `surefire-summary.md`[cite: 15].
 
 ### Крок 3. Запуск лише UI-тестів (Selenium WebDriver)
 Щоб прогнати окремо 8 браузерних сценаріїв з тегом `@Tag("ui")`:
 ```bash
 mvn test -Dgroups=ui -DexcludedGroups=""
 ```
-* **Очікуваний результат:** `Tests run: 8, Failures: 0, Errors: 0, Skipped: 0` (`BUILD SUCCESS`).
+- **Очікуваний результат:** `Tests run: 8, Failures: 0, Errors: 0, Skipped: 0` (`BUILD SUCCESS`).
 
 ### Крок 4. Повний прогін усіх тестів (Unit + UI)
 Щоб запустити весь тестовий набір разом (28 юніт-прогонів + 8 UI-сценаріїв):
 ```bash
 mvn test -DexcludedGroups=none
 ```
-* **Очікуваний результат:** `Tests run: 36, Failures: 5, Errors: 0, Skipped: 0`.
+- **Очікуваний результат:** `Tests run: 36, Failures: 5, Errors: 0, Skipped: 0`.
 
 ---
 
 ## 4. Перегляд звітів Surefire та сценаріїв Selenium IDE
 
-* **Звіти Maven Surefire:** Після запуску команд текстові та XML-звіти генеруються у директорії `target/surefire-reports/`. Зведений протокол збережено у `docs/sprint4/surefire-summary.md`.
-* **Selenium IDE:** Для перегляду записаних сценаріїв відкрийте розширення **Selenium IDE** у браузері Chrome/Firefox, натисніть *Open an existing project* та виберіть файл `selenium-ide/shopline.side`.
+- **Звіти Maven Surefire:** Після запуску команд текстові та XML-звіти генеруються у директорії `target/surefire-reports/`. Зведений протокол збережено у `docs/sprint4/surefire-summary.md`.
+- **Selenium IDE:** Для перегляду записаних сценаріїв відкрийте розширення **Selenium IDE** у браузері Chrome/Firefox, натисніть *Open an existing project* та виберіть файл `selenium-ide/shopline.side`.
 
 ---
 
