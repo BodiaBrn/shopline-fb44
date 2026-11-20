@@ -71,7 +71,7 @@ cd shopline-fb44
 mvn clean test
 ```
 - **Очікуваний результат:** `Tests run: 28, Failures: 5, Errors: 0, Skipped: 0`.  
-- **Примітка щодо статусу `BUILD FAILURE`:** Падіння 5 юніт-тестів є очікуваним і підтверджує виявлення закладених дефектів модуля `v1` (`BUG-MOD-001` – `BUG-MOD-005`, Issues `#13`–`#17`), зафіксованих у GitHub Issues з міткою `module` та у протоколі `surefire-summary.md`[cite: 15].
+- **Примітка щодо статусу `BUILD FAILURE`:** Падіння 5 юніт-тестів є очікуваним і підтверджує виявлення закладених дефектів модуля `v1` (`BUG-MOD-001` – `BUG-MOD-005`, Issues `#13`–`#17`), зафіксованих у GitHub Issues з міткою `module` та у протоколі `surefire-summary.md`.
 
 ### Крок 3. Запуск лише UI-тестів (Selenium WebDriver)
 Щоб прогнати окремо 8 браузерних сценаріїв з тегом `@Tag("ui")`:
