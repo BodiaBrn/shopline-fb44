@@ -2,6 +2,7 @@ package ua.kpi.tzyapz.shopline.ui;
 
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -11,6 +12,8 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -47,11 +50,38 @@ class CheckoutUiTest {
         wait.until(ExpectedConditions.elementToBeClickable(availableProduct)).click();
     }
 
+    /**
+     * Заповнює поле, лише якщо воно є на сторінці і порожнє.
+     * Для випадаючого списку обирає перший непорожній варіант.
+     */
     private void fillIfBlank(By locator, String fallbackValue) {
-        WebElement field = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-        if (field.getAttribute("value") == null || field.getAttribute("value").isBlank()) {
+        List<WebElement> found = driver.findElements(locator);
+        if (found.isEmpty()) {
+            return; // поля немає в поточній версії форми
+        }
+        WebElement field = found.get(0);
+        String current = field.getAttribute("value");
+        if (current != null && !current.isBlank()) {
+            return;
+        }
+        if ("select".equalsIgnoreCase(field.getTagName())) {
+            Select select = new Select(field);
+            select.getOptions().stream()
+                    .map(option -> option.getAttribute("value"))
+                    .filter(value -> value != null && !value.isBlank())
+                    .findFirst()
+                    .ifPresent(select::selectByValue);
+        } else {
             field.sendKeys(fallbackValue);
         }
+    }
+
+    /** Стан полів форми для повідомлення про помилку, якщо кнопка переходу лишилась неактивною. */
+    private String describeFormFields() {
+        return driver.findElements(By.cssSelector("input, select")).stream()
+                .map(e -> e.getAttribute("data-test") + "='" + e.getAttribute("value") + "'"
+                        + (String.valueOf(e.getAttribute("class")).contains("ng-invalid") ? " [INVALID]" : ""))
+                .collect(Collectors.joining("; "));
     }
 
     @Test
@@ -76,13 +106,27 @@ class CheckoutUiTest {
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("[data-test='proceed-1']"))).click();
         // Крок 2: Sign in (користувач уже авторизований)
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("[data-test='proceed-2']"))).click();
-        // Крок 3: Billing Address (страхувальне заповнення порожніх полів профілю)
+
+        // Крок 3: Billing Address
+        WebElement street = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test='street']")));
+        try {
+            // адреса з профілю підвантажується асинхронно — даємо їй до 5 с
+            new WebDriverWait(driver, Duration.ofSeconds(5))
+                    .until(d -> !String.valueOf(street.getAttribute("value")).isBlank());
+        } catch (TimeoutException ignored) {
+            // адреси в профілі немає — порожні поля заповнимо нижче
+        }
         fillIfBlank(By.cssSelector("[data-test='street']"), "Test Street 1");
+        fillIfBlank(By.cssSelector("[data-test='house_number']"), "1");
         fillIfBlank(By.cssSelector("[data-test='city']"), "Kyiv");
         fillIfBlank(By.cssSelector("[data-test='state']"), "Kyiv");
         fillIfBlank(By.cssSelector("[data-test='country']"), "Ukraine");
         fillIfBlank(By.cssSelector("[data-test='postal_code']"), "01001");
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("[data-test='proceed-3']"))).click();
+
+        new WebDriverWait(driver, Duration.ofSeconds(15))
+                .withMessage(() -> "Кнопка proceed-3 неактивна. Поля форми: " + describeFormFields())
+                .until(ExpectedConditions.elementToBeClickable(By.cssSelector("[data-test='proceed-3']")))
+                .click();
 
         // Крок 4: Payment (Cash on Delivery)
         WebElement paymentSelect = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test='payment-method']")));
