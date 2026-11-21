@@ -107,8 +107,8 @@ class PromoCodeValidatorTest {
         // Assert
         assertFalse(result.valid(), "Використаний одноразовий промокод не повинен проходити валідацію");
     }
-}
-@Test
+
+    @Test
     @DisplayName("BL-70: Граничні довжини коду 6 та 10 символів проходять валідацію [Вадим Костюк]")
     void validCodeLengthBoundaries6And10PassValidation() {
         // Arrange
@@ -148,3 +148,4 @@ class PromoCodeValidatorTest {
         // Assert
         assertFalse(result.valid(), "Відсоток " + invalidPercent + "% поза межами 1..50 має відхилятися");
     }
+}
