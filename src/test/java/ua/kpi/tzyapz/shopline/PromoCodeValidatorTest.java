@@ -46,19 +46,21 @@ class PromoCodeValidatorTest {
         assertFalse(result.valid(), "Прострочений промокод повинен бути невалідним");
     }
 
-    @Test
-    @DisplayName("BL-70: Повторне використання одноразового промокоду не проходить валідацію (BUG-MOD-004, #16)")
-    void usedOneTimePromoCodeFailsValidation() {
+        @Test
+    @DisplayName("BL-80: Застосування вже використаного одноразового промокоду викликає IllegalArgumentException (BUG-MOD-004, #16) [Олександр Шандра]")
+    void applyUsedSingleUsePromoCodeThrowsException() {
+        // Дефект v1: GitHub Issue #16 (BUG-MOD-004) — статус used не перевіряється перед застосуванням
         // Arrange
         PromoCode promo = new PromoCode("ONETIME1", PromoCode.Type.PERCENT, new BigDecimal("10"), today.plusDays(5), true, true);
-        
+
         // Act & Assert
-        var result = validator.validate(promo, today, new BigDecimal("1000.00"));
-        assertFalse(result.valid(), "Використаний одноразовий промокод не повинен проходити валідацію");
+        assertThrows(IllegalArgumentException.class,
+                () -> validator.apply(promo, today, new BigDecimal("1000.00")),
+                "Використаний одноразовий промокод не можна застосувати повторно");
     }
 
     @Test
-    @DisplayName("BL-70: Фіксований промокод FIXED перевищує суму замовлення")
+    @DisplayName("BL-80: Фіксований промокод FIXED перевищує суму замовлення")
     void fixedPromoExceedingSubtotalThrowsException() {
         // Arrange
         PromoCode promo = new PromoCode("FIXED500", PromoCode.Type.FIXED, new BigDecimal("500.00"), today.plusDays(5), false, false);
@@ -78,6 +80,7 @@ class PromoCodeValidatorTest {
     @Test
     @DisplayName("BL-70: Промокод у день закінчення терміну дії має бути валідним (BUG-MOD-003, #15) [Богдан Алферов]")
     void promoCodeValidOnExpirationDay() {
+        // Дефект v1: GitHub Issue #15 (BUG-MOD-003)
         // Промокод діє до 'today' включно
         PromoCode promo = new PromoCode("TODAY10", PromoCode.Type.PERCENT, new BigDecimal("10"), today, false, false);
         PromoCodeValidator.ValidationResult result = validator.validate(promo, today, new BigDecimal("1000.00"));
