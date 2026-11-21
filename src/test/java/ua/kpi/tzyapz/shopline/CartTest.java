@@ -149,4 +149,36 @@ class CartTest {
                 () -> cart.addItem("WRN-001", "Ключ гайковий", price, 100),
                 "Максимальна дозволена кількість у рядку — 99 одиниць");
     }
+        @Test
+    @DisplayName("BL-20: Повторне додавання того самого sku збільшує кількість наявного рядка (BUG-MOD-006) [Олександр Шандра]")
+    void addSameSkuTwiceIncreasesQuantityOfExistingLine() {
+        // Дефект v1: BUG-MOD-006 — повторний addItem замінює рядок замість додавання кількості
+        // Arrange
+        BigDecimal price = new BigDecimal("100.00");
+        cart.addItem("WRN-001", "Ключ гайковий", price, 2);
+
+        // Act
+        cart.addItem("WRN-001", "Ключ гайковий", price, 3);
+
+        // Assert
+        assertAll("Перевірка злиття позицій з однаковим sku",
+            () -> assertEquals(1, cart.items().size(), "У кошику має залишитися один рядок"),
+            () -> assertEquals(5, cart.qtyOf("WRN-001"), "Кількість має дорівнювати 2 + 3 = 5"),
+            () -> assertEquals(new BigDecimal("500.00"), cart.subtotal(), "Підсумок має дорівнювати 500.00 грн")
+        );
+    }
+
+    @Test
+    @DisplayName("BL-10: Порожня або null назва товару викликає IllegalArgumentException (BUG-MOD-007) [Олександр Шандра]")
+    void addItemWithBlankOrNullNameThrowsException() {
+        // Дефект v1: BUG-MOD-007 — Cart.addItem не перевіряє параметр name
+        // Arrange
+        BigDecimal price = new BigDecimal("100.00");
+
+        // Act & Assert
+        assertAll("Перевірка некоректної назви товару",
+            () -> assertThrows(IllegalArgumentException.class, () -> cart.addItem("HAM-010", null, price, 1)),
+            () -> assertThrows(IllegalArgumentException.class, () -> cart.addItem("HAM-011", "   ", price, 1))
+        );
+    }
 }
