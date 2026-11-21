@@ -24,7 +24,7 @@ class PromoCodeValidatorTest {
     }
 
     @ParameterizedTest(name = "BL-70: Неприпустимий код '{0}' не проходить валідацію")
-    @ValueSource(strings = {"SHORT", "TOOLONGPROMOCODE123"})
+    @ValueSource(strings = {"SHORT", "ABCDEFGHIJK"})
     void invalidCodeFormatFailsValidation(String invalidCode) {
         // Arrange
         PromoCode promo = new PromoCode(invalidCode, PromoCode.Type.PERCENT, new BigDecimal("10"), today.plusDays(5), false, false);
