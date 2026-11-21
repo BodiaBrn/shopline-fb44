@@ -32,8 +32,9 @@ class DiscountCalculatorTest {
     }
 
     @Test
-    @DisplayName("BL-50: Сума знижки округлюється до копійок за правилом HALF_UP")
+    @DisplayName("BL-50: Сума знижки округлюється до копійок за правилом HALF_UP (BUG-MOD-001, #13)" )
     void volumeDiscountRoundsHalfUp() {
+        // Дефект v1: GitHub Issue #13 (BUG-MOD-001) RoundingMode.DOWN замість HALF_UP
         // Arrange
         BigDecimal subtotal = new BigDecimal("2333.33");
 
@@ -93,7 +94,7 @@ class DiscountCalculatorTest {
     }
 
     @Test
-    @DisplayName("BL-30: Замовлення до 2000.00 грн отримує 0% знижки (граничне значення 1999.99) [Богдан Барановський]")
+    @DisplayName("BL-50: Замовлення до 2000.00 грн отримує 0% знижки (граничне значення 1999.99) [Богдан Барановський]")
     void volumeDiscountBelowFirstTierReturnsZeroPercent() {
         // Arrange
         BigDecimal subtotal = new BigDecimal("1999.99");
@@ -104,8 +105,9 @@ class DiscountCalculatorTest {
     }
 
     @Test
-    @DisplayName("BL-50: Замовлення рівно на 5000.00 грн отримує знижку 10% [Олександр Шандра]")
+    @DisplayName("BL-50: Замовлення рівно на 5000.00 грн отримує знижку 10% [Олександр Шандра] (BUG-MOD-002, #14)")
     void volumeDiscountTenPercentExactBoundary() {
+        // Дефект v1: GitHub Issue #14 (BUG-MOD-002) строга нерівність > 5000 замість >= 5000
         // Arrange
         BigDecimal subtotal = new BigDecimal("5000.00");
 
@@ -114,5 +116,26 @@ class DiscountCalculatorTest {
 
         // Assert
         assertEquals(10, percent, "Для суми рівно 5000.00 грн знижка має становити 10%");
+    }
+        @Test
+    @DisplayName("BL-50: Замовлення на 4999.99 грн отримує 5%, а не 10% (нижня сторона порогу 5000) [Олександр Шандра]")
+    void volumeDiscountJustBelowTenPercentTierReturnsFivePercent() {
+        // Arrange
+        BigDecimal subtotal = new BigDecimal("4999.99");
+
+        // Act
+        int percent = calc.volumeDiscountPercent(subtotal);
+
+        // Assert
+        assertEquals(5, percent, "Для суми 4999.99 грн знижка має становити 5%");
+    }
+
+    @Test
+    @DisplayName("BL-60: Від'ємна сума для розрахунку доставки викликає IllegalArgumentException [Олександр Шандра]")
+    void shippingFeeNegativeSubtotalThrowsException() {
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class,
+                () -> calc.shippingFee(new BigDecimal("-0.01")),
+                "Від'ємна сума замовлення має відхилятися");
     }
 }
