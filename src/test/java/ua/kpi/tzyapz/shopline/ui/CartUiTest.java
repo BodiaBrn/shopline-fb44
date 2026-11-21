@@ -86,7 +86,11 @@ class CartUiTest {
 
         // Act: зміна кількості з 1 на 2
         WebElement qtyInput = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("[data-test='product-quantity']")));
-        qtyInput.sendKeys(Keys.chord(Keys.CONTROL, "a"), "2", Keys.ENTER);
+        // Очищення поля без Ctrl+A: у number-input під headless Chrome виділення не спрацьовує,
+        // і «2» дописувалося до наявної «1» (отримували 12 замість 2)
+        qtyInput.sendKeys(Keys.BACK_SPACE, Keys.BACK_SPACE, Keys.BACK_SPACE,
+                          Keys.DELETE, Keys.DELETE, Keys.DELETE);
+        qtyInput.sendKeys("2", Keys.ENTER);
 
         // Assert: очікування оновлення суми кошика та перевірка перерахунку
         wait.until(d -> !d.findElement(By.cssSelector("[data-test='cart-total']")).getText().trim().equals(oldTotalText));
