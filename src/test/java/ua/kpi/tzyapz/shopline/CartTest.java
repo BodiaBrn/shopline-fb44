@@ -152,7 +152,7 @@ class CartTest {
         @Test
     @DisplayName("BL-20: Повторне додавання того самого sku збільшує кількість наявного рядка (BUG-MOD-006) [Олександр Шандра]")
     void addSameSkuTwiceIncreasesQuantityOfExistingLine() {
-        // Дефект v1: BUG-MOD-006 — повторний addItem замінює рядок замість додавання кількості
+        // Дефект v1: BUG-MOD-006
         // Arrange
         BigDecimal price = new BigDecimal("100.00");
         cart.addItem("WRN-001", "Ключ гайковий", price, 2);
@@ -171,7 +171,7 @@ class CartTest {
     @Test
     @DisplayName("BL-10: Порожня або null назва товару викликає IllegalArgumentException (BUG-MOD-007) [Олександр Шандра]")
     void addItemWithBlankOrNullNameThrowsException() {
-        // Дефект v1: BUG-MOD-007 — Cart.addItem не перевіряє параметр name
+        // Дефект v1: BUG-MOD-007
         // Arrange
         BigDecimal price = new BigDecimal("100.00");
 
