@@ -12,7 +12,7 @@
 
 |№|ПІБ|GitHub-логін|Контакт (e-mail / месенджер) | Сильні сторони (аналітика / моделювання / Java / тексти / презентації)
 |--|--|--|--|--|
-|1| Шандра Олександр | olek-sand | shandra.oleksandr_fb44@edu.kpi.ua | Презентація 
+|1| Шандра Олександр | olek-sand | shandra.oleksandr_fb44@edu.kpi.ua | Аналітика 
 |2| Мулявка Ярослав | yaroslavmulyavka | muliavka.yaroslav_fb44@edu.kpi.ua | Іноземні мови
 |3| Алферов Богдан | alferovbohdanfb44 | alferov.bohdan_fb44@edu.kpi.ua | Моделювання 
 |4| Барановський Богдан | BodiaBrn | baranovskyi.bohdan_fb44@edu.kpi.ua | Аналітика
