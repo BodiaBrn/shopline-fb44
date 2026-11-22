@@ -44,7 +44,6 @@ shopline-fb44/
 │   └── test/java/ua/kpi/tzyapz/shopline/
 │       ├── CartTest.java
 │       ├── DiscountCalculatorTest.java
-│       ├── PromoCodeTest.java
 │       ├── PromoCodeValidatorTest.java
 │       └── ui/
 │           ├── CartUiTest.java
@@ -70,22 +69,22 @@ cd shopline-fb44
 ```bash
 mvn clean test
 ```
-- **Очікуваний результат:** `Tests run: 28, Failures: 5, Errors: 0, Skipped: 0`.  
-- **Примітка щодо статусу `BUILD FAILURE`:** Падіння 5 юніт-тестів є очікуваним і підтверджує виявлення закладених дефектів модуля `v1` (`BUG-MOD-001` – `BUG-MOD-005`, Issues `#13`–`#17`), зафіксованих у GitHub Issues з міткою `module` та у протоколі `surefire-summary.md`.
+- **Очікуваний результат:** `Tests run: 37, Failures: 8, Errors: 0, Skipped: 0`.  
+- **Примітка щодо статусу `BUILD FAILURE`:** Падіння 8 юніт-прогонів є очікуваним і підтверджує виявлення 7 закладених дефектів модуля `v1` (`BUG-MOD-001` – `BUG-MOD-007`, Issues `#13`–`#19`), зафіксованих у GitHub Issues з міткою `module` та у протоколі `surefire-summary.md`.
 
 ### Крок 3. Запуск лише UI-тестів (Selenium WebDriver)
 Щоб прогнати окремо 8 браузерних сценаріїв з тегом `@Tag("ui")`:
 ```bash
-mvn test -Dgroups=ui -DexcludedGroups=""
+mvn clean test -Dgroups=ui -DexcludedGroups=""
 ```
 - **Очікуваний результат:** `Tests run: 8, Failures: 0, Errors: 0, Skipped: 0` (`BUILD SUCCESS`).
 
 ### Крок 4. Повний прогін усіх тестів (Unit + UI)
-Щоб запустити весь тестовий набір разом (28 юніт-прогонів + 8 UI-сценаріїв):
+Щоб запустити весь тестовий набір разом (37 юніт-прогонів + 8 UI-сценаріїв):
 ```bash
-mvn test -DexcludedGroups=none
+mvn clean test -DexcludedGroups=none
 ```
-- **Очікуваний результат:** `Tests run: 36, Failures: 5, Errors: 0, Skipped: 0`.
+- **Очікуваний результат:** `Tests run: 45, Failures: 8, Errors: 0, Skipped: 0`.
 
 ---
 
