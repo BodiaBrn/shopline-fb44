@@ -43,3 +43,5 @@
 | BL-80 | FIXED більше за підсумок → `IllegalArgumentException` | 500.00 при 300.00 | `PromoCodeValidatorTest.fixedPromoExceedingSubtotalThrowsException` | Шандра | Алферов |
 | BL-80 | Застосування використаного одноразового коду → `IllegalArgumentException` (BUG-MOD-004, #16) | singleUse + used | `PromoCodeValidatorTest.applyUsedSingleUsePromoCodeThrowsException` | Шандра | Алферов |
 | BL-70 | Створення моделі `PromoCode` (PERCENT, FIXED, межове значення) | валідні дані | `PromoCodeTest.validPercentPromoCodeCreation`, `validFixedPromoCodeCreation`, `boundaryDiscountValueCreation` | Костюк | Шандра |
+
+**Разом:** 34 тестові методи (37 прогонів у Surefire з урахуванням 3 параметризованих тестів × 2 набори). Внесок: Шандра 14, Костюк 10, Алферов 4, Барановський 3, Мулявка 3. Усі правила BL-10…BL-80 SRS 1.1 (крім вилученої BL-30) покрито; рецензент кожного тесту — не його автор.
