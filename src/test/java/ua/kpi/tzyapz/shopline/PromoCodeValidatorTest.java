@@ -101,6 +101,7 @@ class PromoCodeValidatorTest {
     @Test
     @DisplayName("BL-70: Вже використаний одноразовий промокод з актуальною датою має повертати valid() == false (BUG-MOD-004, #16) [Олександр Шандра]")
     void usedSingleUsePromoCodeWithFutureDateReturnsInvalid() {
+        // Дефект v1: GitHub Issue #16 (BUG-MOD-004) validate() не перевіряє прапорці singleUse/used
         // Arrange
         PromoCode promo = new PromoCode("USED2026", PromoCode.Type.PERCENT, new BigDecimal("10"), today.plusDays(5), true, true);
 
