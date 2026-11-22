@@ -86,11 +86,11 @@
 * **Вимога SRS:** `F-80`, `F-90` | **Кейс Спринту 3:** `TC-026`
 * **URL:** `https://practicesoftwaretesting.com`
 * **Кроки:**
-  1. Відкрити головну сторінку каталогу та натиснути на назву першого товару `By.cssSelector("[data-test='product-name']")`.
+  1. Відкрити головну сторінку каталогу `https://practicesoftwaretesting.com`, обрати першу картку товару `By.cssSelector("a.card")`, що не містить `By.cssSelector("[data-test='out-of-stock']")` (`openFirstAvailableProduct()`), і відкрити її.
   2. На детальній сторінці товару натиснути кнопку `By.cssSelector("[data-test='add-to-cart']")`.
 * **Очікування (`WebDriverWait`, 10 с):**
-  * `ExpectedConditions.elementToBeClickable(By.cssSelector("[data-test='product-name']"))`
-  * `ExpectedConditions.elementToBeClickable(By.cssSelector("[data-test='add-to-cart']"))`
+  * `ExpectedConditions.presenceOfElementLocated(By.cssSelector("[data-test='product-name']"))`
+  * `ExpectedConditions.elementToBeClickable(...)` для картки товару `a.card` та кнопки `[data-test='add-to-cart']`
   * `ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[data-test='cart-quantity']"))`
 * **Перевірка:** Бейдж кількості товарів у шапці `[data-test='cart-quantity']` відображає `"1"`.
 
